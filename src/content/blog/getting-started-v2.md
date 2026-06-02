@@ -13,7 +13,7 @@ Skip any step that does not apply.
 
 <waffle>
 
-This is a waffle block: a sanctioned place for the side thought, the caveat, the tiny argument with yourself, or the note that would otherwise make the main post sag.
+A sanctioned place for the side thought, the caveat, the tiny argument with yourself, or the note that would otherwise make the main post sag.
 
 Readers can turn these off. That keeps the main post direct without forcing the writing to become bloodless.
 

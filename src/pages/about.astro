@@ -4,10 +4,13 @@ import config from '../../astro-theme-config';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const { lead, statement, interests, principles } = config.about;
-const { github, email } = config.social;
+const { github, email, mastodon, devto, linkedin } = config.social;
 
 const links = [
   github && { label: 'GitHub', href: github },
+  mastodon && { label: 'Mastodon', href: mastodon },
+  devto && { label: 'DEV', href: devto },
+  linkedin && { label: 'LinkedIn', href: linkedin },
   email && { label: 'Email', href: `mailto:${email}` },
 ].filter(Boolean) as { label: string; href: string }[];
 ---

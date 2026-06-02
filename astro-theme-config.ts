@@ -88,10 +88,12 @@ const config = {
   },
 
   social: {
-    website: 'https://hanityx.github.io/astro-tone/', // e.g. 'https://your-site.com'
+    website: 'https://example.com', // e.g. 'https://your-site.com'
     email: '', // e.g. 'hello@your-site.com'
+    mastodon: '', // e.g. 'https://mastodon.social/@yourhandle'
+    devto: '', // e.g. 'https://dev.to/yourhandle'
     linkedin: '', // e.g. 'https://www.linkedin.com/in/yourhandle'
-    github: 'https://github.com/hanityx/astro-tone', // e.g. 'https://github.com/yourhandle'
+    github: 'https://github.com/example', // e.g. 'https://github.com/yourhandle'
   },
 
   about: {
