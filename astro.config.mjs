@@ -28,6 +28,9 @@ function withoutConfiguredBase(pathname) {
 export default defineConfig({
   site: configuredSite,
   base: configuredBase || undefined,
+  devToolbar: {
+    enabled: false,
+  },
   integrations: [
     expressiveCode(toneExpressiveCodeOptions),
     mdx(),

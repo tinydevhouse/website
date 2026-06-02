@@ -8,7 +8,6 @@
 .about-header {
   padding-bottom: var(--space-8);
   margin-bottom: var(--space-10);
-  border-bottom: 1px solid var(--separator);
 }
 
 .about-eyebrow {

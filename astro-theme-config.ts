@@ -3,14 +3,6 @@ type NavItem = {
   href: string;
 };
 
-type ProjectItem = {
-  name: string;
-  description: string;
-  tags?: string[];
-  status: string;
-  href?: string;
-};
-
 /**
  * astro-theme-config.ts
  *
@@ -38,12 +30,14 @@ const config = {
   // The logo already links to `/`. Add items here if you want visible header links.
   // Example: [{ label: 'Blog', href: '/blog' }, { label: 'About', href: '/about' }]
   nav: [
+    { label: 'Projects', href: '/projects' },
     { label: 'Blog', href: '/blog' },
     { label: 'About', href: '/about' },
   ] as NavItem[],
 
   // Footer links stay visible by default so readers have a stable way to move around.
   footerNav: [
+    { label: 'Projects', href: '/projects' },
     { label: 'Blog', href: '/blog' },
     { label: 'About', href: '/about' },
     { label: 'Search', href: '/search' },
@@ -99,25 +93,6 @@ const config = {
     linkedin: '', // e.g. 'https://www.linkedin.com/in/yourhandle'
     github: 'https://github.com/hanityx/astro-tone', // e.g. 'https://github.com/yourhandle'
   },
-
-  projects: [
-    {
-      name: 'Photo Gallery',
-      description:
-        'Local-first photo management. A metadata layer for photos on any drive — local folders, external drives, network shares. SQLite database, JSON export.',
-      tags: ['local-first', 'sqlite', 'desktop'],
-      status: 'active',
-      href: '',
-    },
-    {
-      name: 'Hemnet Extension',
-      description:
-        'Chrome extension for hemnet.se. Estimates the monthly cost difference vs current housing, calculates commute distances by transport mode, and adds a summary block to every listing.',
-      tags: ['chrome extension', 'sweden'],
-      status: 'active',
-      href: '',
-    },
-  ] as ProjectItem[],
 
   about: {
     /** Profile image URL. Leave empty to use the text-only About layout. */

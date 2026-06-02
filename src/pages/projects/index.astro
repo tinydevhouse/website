@@ -1,0 +1,54 @@
+---
+import '../../styles/pages/blog-index.css';
+import '../../styles/pages/projects.css';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_DESCRIPTION } from '../../consts';
+import { withBase } from '../../utils/paths';
+
+const projects = (await getCollection('projects'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="Projects" description={SITE_DESCRIPTION}>
+  <main id="main-content" class="blog-main projects-main">
+    <div class="blog-header">
+      <div>
+        <p class="blog-label eyebrow-accent">Work</p>
+        <h1 class="blog-title">Projects</h1>
+      </div>
+    </div>
+
+    <ol class="projects-list">
+      {
+        projects.map((project, i) => (
+          <li class="projects-item">
+            <a href={withBase(`/projects/${project.id}/`)} class="projects-link">
+              <span class="projects-num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div class="projects-body">
+                <div class="projects-top">
+                  <h2 class="projects-title">{project.data.title}</h2>
+                  <span class="projects-status">{project.data.status.replace('-', ' ')}</span>
+                </div>
+                <p class="projects-desc">{project.data.description}</p>
+                {project.data.stack.length > 0 && (
+                  <ul class="projects-stack" aria-label={`${project.data.title} stack`}>
+                    {project.data.stack.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <span class="projects-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+</BaseLayout>

@@ -68,10 +68,6 @@ body {
   line-height: var(--leading-relaxed);
   color: var(--label-primary);
   background-color: var(--bg-primary);
-  background-image:
-    linear-gradient(var(--grid-line-strong) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 28px 28px;
   margin: 0;
   padding: 0;
   overflow-wrap: break-word;

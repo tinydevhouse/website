@@ -250,8 +250,6 @@
   --fill-quaternary: color-mix(in srgb, var(--color-accent) 5%, transparent);
   --separator: color-mix(in srgb, var(--label-primary) 20%, transparent);
   --separator-opaque: var(--ctp-surface2);
-  --grid-line: color-mix(in srgb, var(--label-primary) 2%, transparent);
-  --grid-line-strong: color-mix(in srgb, var(--label-primary) 3%, transparent);
   --btn-glass-bg: color-mix(in srgb, var(--label-primary) 8%, transparent);
   --btn-glass-border: color-mix(in srgb, var(--label-primary) 14%, transparent);
   --btn-glass-color: var(--label-primary);

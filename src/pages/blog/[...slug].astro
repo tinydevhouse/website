@@ -4,16 +4,20 @@ import readingTimeLib from 'reading-time';
 import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
+  const allProjects = (await getCollection('projects')).filter((p) => !p.data.draft);
   const allPosts = (await getCollection('blog'))
     .filter((p) => !p.data.draft)
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
   return allPosts.map((post) => {
     const slug = post.id;
+    const linkedProjectIds = new Set(post.data.projects);
+
     return {
       params: { slug },
       props: {
         post,
+        relatedProjects: allProjects.filter((project) => linkedProjectIds.has(project.id)),
         relatedPosts: allPosts
           .filter((p) => p.id !== post.id)
           .sort((a, b) => {
@@ -30,10 +34,11 @@ export async function getStaticPaths() {
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  relatedProjects: CollectionEntry<'projects'>[];
   relatedPosts: CollectionEntry<'blog'>[];
 }
 
-const { post, relatedPosts } = Astro.props;
+const { post, relatedProjects, relatedPosts } = Astro.props;
 const { Content } = await render(post);
 
 const readingTime = Math.max(1, Math.round(readingTimeLib(post.body ?? '').minutes));
@@ -43,6 +48,7 @@ const readingTime = Math.max(1, Math.round(readingTimeLib(post.body ?? '').minut
   {...post.data}
   readingTime={readingTime}
   focusEffect={post.data.focusEffect}
+  relatedProjects={relatedProjects}
   relatedPosts={relatedPosts}
 >
   <Content />
