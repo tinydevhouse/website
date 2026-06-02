@@ -1,0 +1,103 @@
+---
+import '../styles/pages/home.css';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import config from '../../astro-theme-config';
+import { getUiText } from '../ui';
+import { withBase } from '../utils/paths';
+const tr = getUiText();
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const recentPosts = posts.slice(0, 5);
+const projects = config.projects ?? [];
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <main id="main-content" class="home-main">
+    <section class="home-hero">
+      <h1 class="home-hero-title">
+        <span>Tiny</span>
+        <span>Dev</span>
+        <span>House</span>
+      </h1>
+      <p class="home-hero-desc">{SITE_DESCRIPTION}</p>
+    </section>
+
+    {
+      projects.length > 0 && (
+        <section class="home-section">
+          <h2 class="home-section-label">Projects</h2>
+          <ol class="home-project-list">
+            {projects.map((project, i) => (
+              <li class="home-project-item">
+                <div class="home-project-top">
+                  <span class="home-project-num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  {project.href ? (
+                    <a
+                      href={project.href}
+                      class="home-project-name"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {project.name}
+                      <span class="home-project-ext-arrow" aria-hidden="true">
+                        ↗
+                      </span>
+                    </a>
+                  ) : (
+                    <span class="home-project-name">{project.name}</span>
+                  )}
+                  <span class="home-project-status">{project.status}</span>
+                </div>
+                <p class="home-project-desc">{project.description}</p>
+                {project.tags && project.tags.length > 0 && (
+                  <ul class="home-project-tags" aria-label="Tags">
+                    {project.tags.map((tag) => (
+                      <li class="home-project-tag">{tag}</li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    {
+      recentPosts.length > 0 && (
+        <section class="home-section">
+          <div class="home-section-header">
+            <h2 class="home-section-label">{tr.blogEyebrow}</h2>
+            <a href={withBase('/blog')} class="home-view-all">
+              All posts ↗
+            </a>
+          </div>
+          <ol class="home-post-list">
+            {recentPosts.map((post, i) => (
+              <li class="home-post-item">
+                <a href={withBase(`/blog/${post.id}/`)} class="home-post-link">
+                  <span class="home-post-num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span class="home-post-title">{post.data.title}</span>
+                  <span class="home-post-date">
+                    <FormattedDate date={post.data.pubDate} />
+                  </span>
+                  <span class="home-post-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>

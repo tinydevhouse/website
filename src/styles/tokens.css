@@ -1,0 +1,316 @@
+/* ============================================================
+   Tone Design Tokens — Global Tokens & Base Styles
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. TYPOGRAPHY
+   ------------------------------------------------------------ */
+:root {
+  /* Font Families */
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, monospace;
+
+  /* Type Scale */
+  --text-large-title: 2.125rem;
+  --text-title-1: 1.75rem;
+  --text-title-2: 1.375rem;
+  --text-title-3: 1.25rem;
+  --text-headline: 1.0625rem;
+  --text-body: 1.125rem;
+  --text-callout: 1rem;
+  --text-subheadline: 0.9375rem;
+  --text-footnote: 0.8125rem;
+  --text-caption-1: 0.75rem;
+  --text-caption-2: 0.6875rem;
+
+  /* Font Weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Letter Spacing */
+  --tracking-tight: 0em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+
+  /* ------------------------------------------------------------
+     2. COLOR
+     ------------------------------------------------------------ */
+
+  /* Brand and state colors */
+  --color-accent: #4d6f43;
+  --color-success: #4d6f43;
+  --color-warning: #9b4e2f;
+
+  /* Backward-compatible aliases for existing component styles. */
+  --color-blue: var(--color-accent);
+  --color-green: var(--color-success);
+  --color-orange: var(--color-warning);
+
+  /* Label Colors */
+  --label-primary: #1d1b18;
+  --label-secondary: rgba(29, 27, 24, 0.76);
+  --label-tertiary: rgba(29, 27, 24, 0.58);
+  --label-quaternary: rgba(29, 27, 24, 0.34);
+
+  /* Background Colors */
+  --bg-primary: #f4f0e7;
+  --bg-secondary: #ebe5d8;
+  --bg-tertiary: #fbf8f0;
+
+  /* Grouped Backgrounds */
+  --bg-grouped-primary: #f4f0e7;
+  --bg-grouped-secondary: #fbf8f0;
+  --bg-grouped-tertiary: #ebe5d8;
+
+  /* Fill Colors */
+  --fill-primary: rgba(77, 111, 67, 0.16);
+  --fill-secondary: rgba(77, 111, 67, 0.1);
+  --fill-tertiary: rgba(77, 111, 67, 0.07);
+  --fill-quaternary: rgba(77, 111, 67, 0.04);
+
+  /* Separator */
+  --separator: rgba(29, 27, 24, 0.22);
+  --separator-opaque: #b9ad9b;
+  --grid-line: rgba(29, 27, 24, 0.018);
+  --grid-line-strong: rgba(29, 27, 24, 0.026);
+
+  /* Link */
+  --color-link: var(--color-blue);
+
+  /* ------------------------------------------------------------
+     3. SPACING — 4pt base grid
+     ------------------------------------------------------------ */
+  --space-1: 0.25rem; /* 4pt */
+  --space-2: 0.5rem; /* 8pt */
+  --space-3: 0.75rem; /* 12pt */
+  --space-4: 1rem; /* 16pt */
+  --space-5: 1.25rem; /* 20pt */
+  --space-6: 1.5rem; /* 24pt */
+  --space-8: 2rem; /* 32pt */
+  --space-10: 2.5rem; /* 40pt */
+  --space-12: 3rem; /* 48pt */
+  --space-16: 4rem; /* 64pt */
+  --space-20: 5rem; /* 80pt */
+  --space-24: 6rem; /* 96pt */
+
+  /* ------------------------------------------------------------
+     4. BORDER RADIUS
+     ------------------------------------------------------------ */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
+  --radius-2xl: 8px;
+  --radius-full: 9999px;
+
+  /* Frosted glass button */
+  --btn-glass-bg: rgba(0, 0, 0, 0.06);
+  --btn-glass-border: rgba(0, 0, 0, 0.1);
+  --btn-glass-color: var(--label-primary);
+
+  /* ------------------------------------------------------------
+     5. SHADOWS — Subtle, layered
+     ------------------------------------------------------------ */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+
+  /* ------------------------------------------------------------
+     6. MOTION
+     ------------------------------------------------------------ */
+  --ease-in: cubic-bezier(0.42, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);
+  --ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* ------------------------------------------------------------
+     7. LAYOUT
+     ------------------------------------------------------------ */
+  --max-width-content: 784px;
+  --max-width-wide: 880px;
+  --nav-height: 52px;
+}
+
+/* Catppuccin flavor maps.
+   Bento uses shared palette variables, then maps them to semantic UI variables.
+   This site follows that shape with ctp-* variables and aliases for the existing theme. */
+:root,
+[data-theme='latte'],
+[data-theme='light'] {
+  color-scheme: light;
+
+  --ctp-rosewater: #dc8a78;
+  --ctp-flamingo: #dd7878;
+  --ctp-pink: #ea76cb;
+  --ctp-mauve: #8839ef;
+  --ctp-red: #d20f39;
+  --ctp-maroon: #e64553;
+  --ctp-peach: #fe640b;
+  --ctp-yellow: #df8e1d;
+  --ctp-green: #40a02b;
+  --ctp-teal: #179299;
+  --ctp-sky: #04a5e5;
+  --ctp-sapphire: #209fb5;
+  --ctp-blue: #1e66f5;
+  --ctp-lavender: #7287fd;
+  --ctp-text: #4c4f69;
+  --ctp-subtext1: #5c5f77;
+  --ctp-subtext0: #6c6f85;
+  --ctp-overlay2: #7c7f93;
+  --ctp-overlay1: #8c8fa1;
+  --ctp-overlay0: #9ca0b0;
+  --ctp-surface2: #acb0be;
+  --ctp-surface1: #bcc0cc;
+  --ctp-surface0: #ccd0da;
+  --ctp-base: #eff1f5;
+  --ctp-mantle: #e6e9ef;
+  --ctp-crust: #dce0e8;
+}
+
+[data-theme='frappe'] {
+  color-scheme: dark;
+
+  --ctp-rosewater: #f2d5cf;
+  --ctp-flamingo: #eebebe;
+  --ctp-pink: #f4b8e4;
+  --ctp-mauve: #ca9ee6;
+  --ctp-red: #e78284;
+  --ctp-maroon: #ea999c;
+  --ctp-peach: #ef9f76;
+  --ctp-yellow: #e5c890;
+  --ctp-green: #a6d189;
+  --ctp-teal: #81c8be;
+  --ctp-sky: #99d1db;
+  --ctp-sapphire: #85c1dc;
+  --ctp-blue: #8caaee;
+  --ctp-lavender: #babbf1;
+  --ctp-text: #c6d0f5;
+  --ctp-subtext1: #b5bfe2;
+  --ctp-subtext0: #a5adce;
+  --ctp-overlay2: #949cbb;
+  --ctp-overlay1: #838ba7;
+  --ctp-overlay0: #737994;
+  --ctp-surface2: #626880;
+  --ctp-surface1: #51576d;
+  --ctp-surface0: #414559;
+  --ctp-base: #303446;
+  --ctp-mantle: #292c3c;
+  --ctp-crust: #232634;
+}
+
+[data-theme='macchiato'] {
+  color-scheme: dark;
+
+  --ctp-rosewater: #f4dbd6;
+  --ctp-flamingo: #f0c6c6;
+  --ctp-pink: #f5bde6;
+  --ctp-mauve: #c6a0f6;
+  --ctp-red: #ed8796;
+  --ctp-maroon: #ee99a0;
+  --ctp-peach: #f5a97f;
+  --ctp-yellow: #eed49f;
+  --ctp-green: #a6da95;
+  --ctp-teal: #8bd5ca;
+  --ctp-sky: #91d7e3;
+  --ctp-sapphire: #7dc4e4;
+  --ctp-blue: #8aadf4;
+  --ctp-lavender: #b7bdf8;
+  --ctp-text: #cad3f5;
+  --ctp-subtext1: #b8c0e0;
+  --ctp-subtext0: #a5adcb;
+  --ctp-overlay2: #939ab7;
+  --ctp-overlay1: #8087a2;
+  --ctp-overlay0: #6e738d;
+  --ctp-surface2: #5b6078;
+  --ctp-surface1: #494d64;
+  --ctp-surface0: #363a4f;
+  --ctp-base: #24273a;
+  --ctp-mantle: #1e2030;
+  --ctp-crust: #181926;
+}
+
+[data-theme='mocha'],
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --ctp-rosewater: #f5e0dc;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-pink: #f5c2e7;
+  --ctp-mauve: #cba6f7;
+  --ctp-red: #f38ba8;
+  --ctp-maroon: #eba0ac;
+  --ctp-peach: #fab387;
+  --ctp-yellow: #f9e2af;
+  --ctp-green: #a6e3a1;
+  --ctp-teal: #94e2d5;
+  --ctp-sky: #89dceb;
+  --ctp-sapphire: #74c7ec;
+  --ctp-blue: #89b4fa;
+  --ctp-lavender: #b4befe;
+  --ctp-text: #cdd6f4;
+  --ctp-subtext1: #bac2de;
+  --ctp-subtext0: #a6adc8;
+  --ctp-overlay2: #9399b2;
+  --ctp-overlay1: #7f849c;
+  --ctp-overlay0: #6c7086;
+  --ctp-surface2: #585b70;
+  --ctp-surface1: #45475a;
+  --ctp-surface0: #313244;
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+}
+
+:root {
+  --background: var(--ctp-base);
+  --accent: var(--ctp-surface0);
+  --cards: var(--ctp-mantle);
+  --fg: var(--ctp-text);
+  --sfg: var(--ctp-rosewater);
+
+  --color-accent: var(--ctp-green);
+  --color-success: var(--ctp-green);
+  --color-warning: var(--ctp-peach);
+  --color-blue: var(--color-accent);
+  --color-green: var(--color-success);
+  --color-orange: var(--color-warning);
+  --color-link: var(--color-blue);
+
+  --label-primary: var(--ctp-text);
+  --label-secondary: var(--ctp-subtext1);
+  --label-tertiary: var(--ctp-subtext0);
+  --label-quaternary: var(--ctp-overlay0);
+
+  --bg-primary: var(--ctp-base);
+  --bg-secondary: var(--ctp-mantle);
+  --bg-tertiary: var(--ctp-surface0);
+  --bg-grouped-primary: var(--ctp-base);
+  --bg-grouped-secondary: var(--ctp-surface0);
+  --bg-grouped-tertiary: var(--ctp-mantle);
+
+  --fill-primary: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  --fill-secondary: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --fill-tertiary: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  --fill-quaternary: color-mix(in srgb, var(--color-accent) 5%, transparent);
+  --separator: color-mix(in srgb, var(--label-primary) 20%, transparent);
+  --separator-opaque: var(--ctp-surface2);
+  --grid-line: color-mix(in srgb, var(--label-primary) 2%, transparent);
+  --grid-line-strong: color-mix(in srgb, var(--label-primary) 3%, transparent);
+  --btn-glass-bg: color-mix(in srgb, var(--label-primary) 8%, transparent);
+  --btn-glass-border: color-mix(in srgb, var(--label-primary) 14%, transparent);
+  --btn-glass-color: var(--label-primary);
+}

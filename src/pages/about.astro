@@ -1,0 +1,76 @@
+---
+import '../styles/pages/about.css';
+import config from '../../astro-theme-config';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { lead, statement, interests, principles } = config.about;
+const { github, email } = config.social;
+
+const links = [
+  github && { label: 'GitHub', href: github },
+  email && { label: 'Email', href: `mailto:${email}` },
+].filter(Boolean) as { label: string; href: string }[];
+---
+
+<BaseLayout title="About" description={lead}>
+  <main id="main-content" class="about-main">
+
+    <header class="about-header">
+      <p class="about-eyebrow eyebrow-accent">About</p>
+      <h1 class="about-title">Tiny Dev House</h1>
+    </header>
+
+    <section class="about-bio">
+      <p>{lead}</p>
+      <p>{statement}</p>
+    </section>
+
+    {principles && principles.length > 0 && (
+      <>
+        <hr class="about-rule" />
+        <section class="about-section" aria-labelledby="about-principles">
+          <h2 id="about-principles" class="about-section-heading">Principles</h2>
+          <ol class="about-principles">
+            {principles.map((p) => (
+              <li>
+                <div class="principle-text"><strong>{p.title}</strong>{' '}{p.body}</div>
+              </li>
+            ))}
+          </ol>
+          <p class="about-note">Rough and evolving.</p>
+        </section>
+      </>
+    )}
+
+    {interests && interests.length > 0 && (
+      <>
+        <hr class="about-rule" />
+        <section class="about-section" aria-labelledby="about-interests">
+          <h2 id="about-interests" class="about-section-heading">Interests</h2>
+          <ul class="about-list">
+            {interests.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+      </>
+    )}
+
+    <hr class="about-rule" />
+
+    <footer class="about-footer">
+      {links.length > 0 && (
+        <nav class="about-links" aria-label="Social links">
+          {links.map((link, i) => (
+            <>
+              {i > 0 && <span aria-hidden="true"> · </span>}
+              <a href={link.href} target={link.href.startsWith('mailto:') ? undefined : '_blank'} rel={link.href.startsWith('mailto:') ? undefined : 'noopener'}>
+                {link.label}
+              </a>
+            </>
+          ))}
+        </nav>
+      )}
+      <p class="about-planted">Say hello.</p>
+    </footer>
+
+  </main>
+</BaseLayout>

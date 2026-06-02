@@ -1,0 +1,94 @@
+---
+---
+
+<button
+  type="button"
+  class="waffle-toggle"
+  data-waffle-toggle
+  aria-pressed="true"
+  aria-label="Hide waffle"
+  title="Waffle"
+>
+  <span aria-hidden="true">🧇</span>
+</button>
+
+<script is:inline>
+  (function () {
+    function mountWaffleToggle() {
+      const root = document.documentElement;
+      const button = document.querySelector('[data-waffle-toggle]');
+      if (!(button instanceof HTMLButtonElement) || button.dataset.ready === 'true') return;
+      button.dataset.ready = 'true';
+
+      const readPreference = () => {
+        try {
+          return localStorage.getItem('waffle') || 'on';
+        } catch {
+          return 'on';
+        }
+      };
+
+      const writePreference = (value) => {
+        try {
+          localStorage.setItem('waffle', value);
+        } catch {
+          // The toggle still works for the current page when storage is unavailable.
+        }
+      };
+
+      const sync = (value) => {
+        const visible = value !== 'off';
+        root.setAttribute('data-waffle', visible ? 'on' : 'off');
+        button.setAttribute('aria-pressed', String(visible));
+        button.classList.toggle('is-active', visible);
+        button.setAttribute('aria-label', visible ? 'Hide waffle' : 'Show waffle');
+        button.setAttribute('title', visible ? 'Hide waffle' : 'Show waffle');
+      };
+
+      sync(readPreference());
+
+      button.addEventListener('click', () => {
+        const next = root.getAttribute('data-waffle') === 'off' ? 'on' : 'off';
+        sync(next);
+        writePreference(next);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mountWaffleToggle, { once: true });
+    } else {
+      mountWaffleToggle();
+    }
+  })();
+</script>
+
+<style>
+.waffle-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 1.95rem;
+  height: 1.95rem;
+  border: 1px solid var(--separator);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--label-secondary);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.waffle-toggle:hover {
+  border-color: var(--label-tertiary);
+  color: var(--label-primary);
+}
+
+.waffle-toggle.is-active {
+  background: var(--bg-tertiary);
+  box-shadow: inset 0 0 0 1px var(--separator);
+}
+
+.waffle-toggle:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.18rem;
+}
+</style>

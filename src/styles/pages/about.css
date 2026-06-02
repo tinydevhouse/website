@@ -1,0 +1,186 @@
+.about-main {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-6) var(--space-24);
+}
+
+/* ── Header ─────────────────────────────── */
+.about-header {
+  padding-bottom: var(--space-8);
+  margin-bottom: var(--space-10);
+  border-bottom: 1px solid var(--separator);
+}
+
+.about-eyebrow {
+  margin: 0 0 var(--space-2);
+}
+
+.about-title {
+  font-family: var(--font-mono);
+  font-size: clamp(2.125rem, 5vw, 2.875rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0;
+  margin: 0;
+  line-height: 1;
+  color: var(--label-primary);
+}
+
+/* ── Bio ────────────────────────────────── */
+.about-bio {
+  display: grid;
+  gap: var(--space-5);
+  margin-bottom: var(--space-10);
+}
+
+.about-bio p {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--label-secondary);
+  line-height: var(--leading-relaxed);
+  max-width: 56ch;
+}
+
+/* ── Rule ───────────────────────────────── */
+.about-rule {
+  border: none;
+  border-top: 1px solid var(--separator);
+  margin: var(--space-10) 0;
+}
+
+/* ── Sections ───────────────────────────── */
+.about-section {
+  margin-bottom: var(--space-2);
+}
+
+.about-section-heading {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-1);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--label-tertiary);
+  margin: 0 0 var(--space-6);
+}
+
+/* ── Principles ─────────────────────────── */
+.about-principles {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-5);
+  counter-reset: principles;
+}
+
+.about-principles li {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: var(--space-3);
+  font-size: var(--text-callout);
+  color: var(--label-secondary);
+  line-height: var(--leading-relaxed);
+  counter-increment: principles;
+}
+
+.about-principles li::before {
+  content: counter(principles);
+  font-family: var(--font-mono);
+  font-size: var(--text-footnote);
+  color: var(--label-quaternary);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.2em;
+}
+
+.about-principles li strong {
+  color: var(--label-primary);
+  font-weight: 600;
+}
+
+.about-note {
+  margin: var(--space-5) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-1);
+  color: var(--label-quaternary);
+}
+
+/* ── Interests ──────────────────────────── */
+.about-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.about-list li {
+  font-size: var(--text-callout);
+  color: var(--label-secondary);
+  line-height: var(--leading-normal);
+  padding-left: var(--space-5);
+  position: relative;
+}
+
+.about-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--label-quaternary);
+  font-family: var(--font-mono);
+}
+
+/* ── Footer ─────────────────────────────── */
+.about-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.about-links a {
+  font-family: var(--font-mono);
+  font-size: var(--text-footnote);
+  color: var(--label-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.about-links a:hover {
+  color: var(--label-primary);
+  opacity: 1;
+}
+
+.about-links span {
+  font-family: var(--font-mono);
+  font-size: var(--text-footnote);
+  color: var(--label-quaternary);
+}
+
+.about-planted {
+  font-family: var(--font-mono);
+  font-size: var(--text-footnote);
+  color: var(--label-quaternary);
+  margin: 0;
+}
+
+/* ── Mobile ─────────────────────────────── */
+@media (max-width: 600px) {
+  .about-main {
+    padding: var(--space-12) var(--space-4) var(--space-16);
+  }
+
+
+  .about-header {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .about-principles li {
+    grid-template-columns: 1.25rem 1fr;
+    gap: var(--space-2);
+  }
+}

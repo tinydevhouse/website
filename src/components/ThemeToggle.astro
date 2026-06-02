@@ -1,0 +1,178 @@
+---
+const flavors = [
+  { id: 'latte', label: 'Latte', emoji: '🌻' },
+  { id: 'frappe', label: 'Frappé', emoji: '🪴' },
+  { id: 'macchiato', label: 'Macchiato', emoji: '🌺' },
+  { id: 'mocha', label: 'Mocha', emoji: '🌿' },
+];
+---
+
+<details class="theme-menu" data-theme-menu>
+  <summary class="theme-trigger" data-theme-trigger aria-label="Theme" title="Theme">
+    <span data-theme-trigger-icon aria-hidden="true">🌻</span>
+  </summary>
+  <div class="theme-list" role="menu" aria-label="Theme">
+    {
+      flavors.map((flavor) => (
+        <button
+          type="button"
+          class="theme-item"
+          data-theme-choice={flavor.id}
+          role="menuitemradio"
+          aria-checked="false"
+        >
+          <span aria-hidden="true">{flavor.emoji}</span>
+          <span>{flavor.label}</span>
+        </button>
+      ))
+    }
+  </div>
+</details>
+
+<script is:inline>
+  (function () {
+    function mountThemeMenu() {
+      const root = document.documentElement;
+      const menu = document.querySelector('[data-theme-menu]');
+      const icon = document.querySelector('[data-theme-trigger-icon]');
+      const trigger = document.querySelector('[data-theme-trigger]');
+      const choices = document.querySelectorAll('[data-theme-choice]');
+      if (!(menu instanceof HTMLDetailsElement) || !(icon instanceof HTMLElement)) return;
+      if (!(trigger instanceof HTMLElement) || menu.dataset.ready === 'true') return;
+      menu.dataset.ready = 'true';
+
+      const flavors = {
+        latte: { label: 'Latte', emoji: '🌻' },
+        frappe: { label: 'Frappé', emoji: '🪴' },
+        macchiato: { label: 'Macchiato', emoji: '🌺' },
+        mocha: { label: 'Mocha', emoji: '🌿' },
+      };
+
+      function normalize(theme) {
+        if (theme === 'light') return 'latte';
+        if (theme === 'dark') return 'mocha';
+        return Object.prototype.hasOwnProperty.call(flavors, theme) ? theme : 'latte';
+      }
+
+      function sync() {
+        const active = normalize(root.getAttribute('data-theme') || 'latte');
+        const flavor = flavors[active];
+        icon.textContent = flavor.emoji;
+        trigger.setAttribute('aria-label', `Theme: ${flavor.label}`);
+        trigger.setAttribute('title', `Theme: ${flavor.label}`);
+
+        choices.forEach((choice) => {
+          if (!(choice instanceof HTMLButtonElement)) return;
+          const selected = choice.dataset.themeChoice === active;
+          choice.classList.toggle('is-active', selected);
+          choice.setAttribute('aria-checked', String(selected));
+        });
+      }
+
+      choices.forEach((choice) => {
+        if (!(choice instanceof HTMLButtonElement)) return;
+        choice.addEventListener('click', () => {
+          const next = normalize(choice.dataset.themeChoice || 'latte');
+          root.setAttribute('data-theme', next);
+          try {
+            localStorage.setItem('theme', next);
+          } catch {
+            // The visible control still works when storage is unavailable.
+          }
+          sync();
+          menu.open = false;
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!menu.open) return;
+        if (event.target instanceof Node && menu.contains(event.target)) return;
+        menu.open = false;
+      });
+
+      new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+      sync();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mountThemeMenu, { once: true });
+    } else {
+      mountThemeMenu();
+    }
+  })();
+</script>
+
+<style>
+.theme-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.theme-trigger {
+  display: grid;
+  place-items: center;
+  width: 1.95rem;
+  height: 1.95rem;
+  border: 1px solid var(--separator);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--label-secondary);
+  cursor: pointer;
+  list-style: none;
+}
+
+.theme-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.theme-menu[open] .theme-trigger,
+.theme-trigger:hover {
+  border-color: var(--label-tertiary);
+  background: var(--bg-tertiary);
+  color: var(--label-primary);
+}
+
+.theme-trigger:focus-visible,
+.theme-item:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.18rem;
+}
+
+.theme-list {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: 200;
+  display: grid;
+  min-width: 10rem;
+  padding: var(--space-1);
+  border: 1px solid var(--separator);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ctp-crust) 28%, transparent);
+}
+
+.theme-item {
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2rem;
+  width: 100%;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: calc(var(--radius-sm) - 2px);
+  background: transparent;
+  color: var(--label-secondary);
+  font: inherit;
+  font-size: var(--text-footnote);
+  text-align: left;
+  cursor: pointer;
+}
+
+.theme-item:hover,
+.theme-item.is-active {
+  background: var(--fill-tertiary);
+  color: var(--label-primary);
+}
+</style>
