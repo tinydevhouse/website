@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------
-   15. UTILITY CLASSES
+   UTILITY CLASSES
    ------------------------------------------------------------ */
 
 /* Visually Hidden (accessibility) */
@@ -15,14 +15,7 @@
   border: 0;
 }
 
-/* Frosted Glass */
-.glass {
-  background-color: color-mix(in srgb, var(--bg-primary) 86%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-}
-
-/* Glass Button */
+/* Button */
 .btn {
   display: inline-flex;
   align-items: center;

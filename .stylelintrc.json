@@ -14,6 +14,7 @@
     "rule-empty-line-before": null,
     "custom-property-pattern": "^(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*|ec-codePad(?:Blk|Inl))$",
     "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["global"] }],
+    "selector-type-no-unknown": [true, { "ignoreTypes": ["waffle"] }],
     "value-keyword-case": null
   },
   "overrides": [

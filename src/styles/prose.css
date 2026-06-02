@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------
-   14. PROSE (blog content)
+   PROSE (blog content)
    ------------------------------------------------------------ */
 .prose {
   --inline-code-bg: color-mix(in srgb, var(--color-blue) 7%, transparent);

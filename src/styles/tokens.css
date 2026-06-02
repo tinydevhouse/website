@@ -1,9 +1,11 @@
 /* ============================================================
-   Tone Design Tokens — Global Tokens & Base Styles
+   Design Tokens
+   Part 1: base scale tokens (type, spacing, radius, motion, layout).
+   Part 2: Catppuccin flavor maps -> semantic color variables.
    ============================================================ */
 
 /* ------------------------------------------------------------
-   1. TYPOGRAPHY
+   TYPOGRAPHY
    ------------------------------------------------------------ */
 :root {
   /* Font Families */
@@ -41,52 +43,7 @@
   --tracking-wide: 0.025em;
 
   /* ------------------------------------------------------------
-     2. COLOR
-     ------------------------------------------------------------ */
-
-  /* Brand and state colors */
-  --color-accent: #4d6f43;
-  --color-success: #4d6f43;
-  --color-warning: #9b4e2f;
-
-  /* Backward-compatible aliases for existing component styles. */
-  --color-blue: var(--color-accent);
-  --color-green: var(--color-success);
-  --color-orange: var(--color-warning);
-
-  /* Label Colors */
-  --label-primary: #1d1b18;
-  --label-secondary: rgba(29, 27, 24, 0.76);
-  --label-tertiary: rgba(29, 27, 24, 0.58);
-  --label-quaternary: rgba(29, 27, 24, 0.34);
-
-  /* Background Colors */
-  --bg-primary: #f4f0e7;
-  --bg-secondary: #ebe5d8;
-  --bg-tertiary: #fbf8f0;
-
-  /* Grouped Backgrounds */
-  --bg-grouped-primary: #f4f0e7;
-  --bg-grouped-secondary: #fbf8f0;
-  --bg-grouped-tertiary: #ebe5d8;
-
-  /* Fill Colors */
-  --fill-primary: rgba(77, 111, 67, 0.16);
-  --fill-secondary: rgba(77, 111, 67, 0.1);
-  --fill-tertiary: rgba(77, 111, 67, 0.07);
-  --fill-quaternary: rgba(77, 111, 67, 0.04);
-
-  /* Separator */
-  --separator: rgba(29, 27, 24, 0.22);
-  --separator-opaque: #b9ad9b;
-  --grid-line: rgba(29, 27, 24, 0.018);
-  --grid-line-strong: rgba(29, 27, 24, 0.026);
-
-  /* Link */
-  --color-link: var(--color-blue);
-
-  /* ------------------------------------------------------------
-     3. SPACING — 4pt base grid
+     SPACING — 4pt base grid
      ------------------------------------------------------------ */
   --space-1: 0.25rem; /* 4pt */
   --space-2: 0.5rem; /* 8pt */
@@ -102,7 +59,7 @@
   --space-24: 6rem; /* 96pt */
 
   /* ------------------------------------------------------------
-     4. BORDER RADIUS
+     BORDER RADIUS
      ------------------------------------------------------------ */
   --radius-xs: 4px;
   --radius-sm: 6px;
@@ -112,21 +69,8 @@
   --radius-2xl: 8px;
   --radius-full: 9999px;
 
-  /* Frosted glass button */
-  --btn-glass-bg: rgba(0, 0, 0, 0.06);
-  --btn-glass-border: rgba(0, 0, 0, 0.1);
-  --btn-glass-color: var(--label-primary);
-
   /* ------------------------------------------------------------
-     5. SHADOWS — Subtle, layered
-     ------------------------------------------------------------ */
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
-  --shadow-xl: none;
-
-  /* ------------------------------------------------------------
-     6. MOTION
+     MOTION
      ------------------------------------------------------------ */
   --ease-in: cubic-bezier(0.42, 0, 1, 1);
   --ease-out: cubic-bezier(0, 0, 0.58, 1);
@@ -138,16 +82,16 @@
   --duration-slow: 400ms;
 
   /* ------------------------------------------------------------
-     7. LAYOUT
+     LAYOUT
      ------------------------------------------------------------ */
   --max-width-content: 784px;
   --max-width-wide: 880px;
   --nav-height: 52px;
 }
 
-/* Catppuccin flavor maps.
-   Bento uses shared palette variables, then maps them to semantic UI variables.
-   This site follows that shape with ctp-* variables and aliases for the existing theme. */
+/* Catppuccin flavor maps: each theme defines the raw ctp-* palette,
+   then the final :root block maps those onto the semantic UI variables
+   (--bg-*, --label-*, --fill-*, --color-*) used across the site. */
 :root,
 [data-theme='latte'],
 [data-theme='light'] {
@@ -275,13 +219,11 @@
   --ctp-crust: #11111b;
 }
 
+/* Semantic mapping: a second :root by design — it stays separate from the
+   scale tokens above so the palette definitions and their UI-role mapping
+   read as distinct sections. */
+/* stylelint-disable-next-line no-duplicate-selectors */
 :root {
-  --background: var(--ctp-base);
-  --accent: var(--ctp-surface0);
-  --cards: var(--ctp-mantle);
-  --fg: var(--ctp-text);
-  --sfg: var(--ctp-rosewater);
-
   --color-accent: var(--ctp-green);
   --color-success: var(--ctp-green);
   --color-warning: var(--ctp-peach);

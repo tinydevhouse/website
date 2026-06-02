@@ -12,7 +12,7 @@ const navItems = config.nav;
 ---
 
 <a href="#main-content" class="skip-link" tabindex="0">{skipLinkLabel}</a>
-<header class="site-header glass">
+<header class="site-header">
   <nav class="nav-inner" aria-label={navAriaLabel}>
     <a href={withBase('/')} class="nav-logo">{headerTitle}</a>
     <div class="nav-right">
@@ -88,8 +88,6 @@ const navItems = config.nav;
   height: var(--nav-height);
   border-bottom: 1px solid var(--separator);
   background-color: var(--bg-primary);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   transform: translateY(0);
   transition:
     transform var(--duration-normal) var(--ease-out),
@@ -97,11 +95,7 @@ const navItems = config.nav;
   will-change: transform;
 }
 
-.site-header.glass {
-  background-color: var(--bg-primary);
-}
-
-.site-header.glass.is-scrolled {
+.site-header.is-scrolled {
   background-color: color-mix(in srgb, var(--bg-primary) 88%, transparent);
 }
 

@@ -125,19 +125,6 @@ const flavors = [
   display: none;
 }
 
-.theme-menu[open] .theme-trigger,
-.theme-trigger:hover {
-  border-color: var(--label-tertiary);
-  background: var(--bg-tertiary);
-  color: var(--label-primary);
-}
-
-.theme-trigger:focus-visible,
-.theme-item:focus-visible {
-  outline: 1px solid currentColor;
-  outline-offset: 0.18rem;
-}
-
 .theme-list {
   position: absolute;
   top: calc(100% + var(--space-2));
@@ -170,9 +157,22 @@ const flavors = [
   cursor: pointer;
 }
 
+.theme-trigger:focus-visible,
+.theme-item:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.18rem;
+}
+
 .theme-item:hover,
 .theme-item.is-active {
   background: var(--fill-tertiary);
+  color: var(--label-primary);
+}
+
+.theme-trigger:hover,
+.theme-menu[open] .theme-trigger {
+  border-color: var(--label-tertiary);
+  background: var(--bg-tertiary);
   color: var(--label-primary);
 }
 </style>
