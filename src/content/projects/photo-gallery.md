@@ -5,7 +5,8 @@ pubDate: 2026-06-02
 stack: ["Rust", "Tauri", "React", "Local-first", "AI"]
 status: 'in-progress'
 featured: true
-heroImage: "" # TODO: drop in hero shot — wide screenshot of the gallery grid
+projectOrder: 1
+heroImage: '../../assets/tone-sample-blue-architecture.jpg'
 draft: false
 ---
 

@@ -5,6 +5,7 @@ pubDate: 2026-06-02
 stack: ['chrome extension', 'sweden', 'housing']
 status: 'in-progress'
 featured: true
+projectOrder: 2
 ---
 
 ## Overview
