@@ -38,6 +38,7 @@ const projects = defineCollection({
       demoUrl: z.url().optional(),
       repoUrl: z.url().optional(),
       featured: z.boolean().default(false),
+      projectOrder: z.number().int().positive().optional(),
       draft: z.boolean().default(false),
     }),
 });

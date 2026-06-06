@@ -29,20 +29,24 @@ const isActive =
   font-size: var(--text-caption-1);
   font-weight: var(--weight-regular);
   color: var(--label-secondary);
-  text-decoration: none;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
   transition:
     color var(--duration-fast) var(--ease-out),
+    text-decoration-color var(--duration-fast) var(--ease-out),
     opacity var(--duration-fast) var(--ease-out);
 }
 
 .nav-link:hover {
-  color: var(--label-primary);
-  font-weight: var(--weight-semibold);
-  opacity: 0.72;
+  color: var(--color-link);
+  text-decoration-color: currentColor;
+  opacity: 1;
 }
 
 .nav-link.active {
-  color: var(--label-primary);
-  font-weight: var(--weight-semibold);
+  color: var(--color-link);
+  text-decoration-color: currentColor;
 }
 </style>

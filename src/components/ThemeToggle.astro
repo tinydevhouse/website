@@ -1,93 +1,87 @@
----
-const flavors = [
-  { id: 'latte', label: 'Latte', emoji: '🌻' },
-  { id: 'frappe', label: 'Frappé', emoji: '🪴' },
-  { id: 'macchiato', label: 'Macchiato', emoji: '🌺' },
-  { id: 'mocha', label: 'Mocha', emoji: '🌿' },
-];
----
-
-<details class="theme-menu" data-theme-menu>
-  <summary class="theme-trigger" data-theme-trigger aria-label="Theme" title="Theme">
-    <span data-theme-trigger-icon aria-hidden="true">🌻</span>
-  </summary>
-  <div class="theme-list" role="menu" aria-label="Theme">
-    {
-      flavors.map((flavor) => (
-        <button
-          type="button"
-          class="theme-item"
-          data-theme-choice={flavor.id}
-          role="menuitemradio"
-          aria-checked="false"
-        >
-          <span aria-hidden="true">{flavor.emoji}</span>
-          <span>{flavor.label}</span>
-        </button>
-      ))
-    }
-  </div>
-</details>
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-label="Switch theme"
+  title="Switch theme"
+>
+  <svg
+    class="theme-icon theme-icon-moon"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"></path>
+  </svg>
+  <svg
+    class="theme-icon theme-icon-sun"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656"></path>
+    <path d="M6.343 17.657l-1.414 1.414"></path>
+    <path d="M6.343 6.343l-1.414 -1.414"></path>
+    <path d="M17.657 6.343l1.414 -1.414"></path>
+    <path d="M17.657 17.657l1.414 1.414"></path>
+    <path d="M4 12h-2"></path>
+    <path d="M12 4v-2"></path>
+    <path d="M20 12h2"></path>
+    <path d="M12 20v2"></path>
+  </svg>
+</button>
 
 <script is:inline>
   (function () {
-    function mountThemeMenu() {
+    function mountThemeToggle() {
       const root = document.documentElement;
-      const menu = document.querySelector('[data-theme-menu]');
-      const icon = document.querySelector('[data-theme-trigger-icon]');
-      const trigger = document.querySelector('[data-theme-trigger]');
-      const choices = document.querySelectorAll('[data-theme-choice]');
-      if (!(menu instanceof HTMLDetailsElement) || !(icon instanceof HTMLElement)) return;
-      if (!(trigger instanceof HTMLElement) || menu.dataset.ready === 'true') return;
-      menu.dataset.ready = 'true';
-
-      const flavors = {
-        latte: { label: 'Latte', emoji: '🌻' },
-        frappe: { label: 'Frappé', emoji: '🪴' },
-        macchiato: { label: 'Macchiato', emoji: '🌺' },
-        mocha: { label: 'Mocha', emoji: '🌿' },
-      };
+      const toggle = document.querySelector('[data-theme-toggle]');
+      if (!(toggle instanceof HTMLButtonElement) || toggle.dataset.ready === 'true') return;
+      toggle.dataset.ready = 'true';
 
       function normalize(theme) {
-        if (theme === 'light') return 'latte';
-        if (theme === 'dark') return 'mocha';
-        return Object.prototype.hasOwnProperty.call(flavors, theme) ? theme : 'latte';
+        return theme === 'dark' || theme === 'mocha' || theme === 'macchiato' || theme === 'frappe'
+          ? 'mocha'
+          : 'latte';
       }
 
       function sync() {
-        const active = normalize(root.getAttribute('data-theme') || 'latte');
-        const flavor = flavors[active];
-        icon.textContent = flavor.emoji;
-        trigger.setAttribute('aria-label', `Theme: ${flavor.label}`);
-        trigger.setAttribute('title', `Theme: ${flavor.label}`);
-
-        choices.forEach((choice) => {
-          if (!(choice instanceof HTMLButtonElement)) return;
-          const selected = choice.dataset.themeChoice === active;
-          choice.classList.toggle('is-active', selected);
-          choice.setAttribute('aria-checked', String(selected));
-        });
+        const current = root.getAttribute('data-theme') || 'latte';
+        const active = normalize(current);
+        if (current !== active) {
+          root.setAttribute('data-theme', active);
+          return;
+        }
+        const isDark = active === 'mocha';
+        toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+        toggle.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
       }
 
-      choices.forEach((choice) => {
-        if (!(choice instanceof HTMLButtonElement)) return;
-        choice.addEventListener('click', () => {
-          const next = normalize(choice.dataset.themeChoice || 'latte');
-          root.setAttribute('data-theme', next);
-          try {
-            localStorage.setItem('theme', next);
-          } catch {
-            // The visible control still works when storage is unavailable.
-          }
-          sync();
-          menu.open = false;
-        });
-      });
-
-      document.addEventListener('click', (event) => {
-        if (!menu.open) return;
-        if (event.target instanceof Node && menu.contains(event.target)) return;
-        menu.open = false;
+      toggle.addEventListener('click', () => {
+        const next = normalize(root.getAttribute('data-theme') || 'latte') === 'mocha' ? 'latte' : 'mocha';
+        root.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('theme', next);
+        } catch {
+          // The visible control still works when storage is unavailable.
+        }
+        sync();
       });
 
       new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
@@ -95,84 +89,66 @@ const flavors = [
     }
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', mountThemeMenu, { once: true });
+      document.addEventListener('DOMContentLoaded', mountThemeToggle, { once: true });
     } else {
-      mountThemeMenu();
+      mountThemeToggle();
     }
   })();
 </script>
 
 <style>
-.theme-menu {
-  position: relative;
+.theme-toggle {
   display: inline-flex;
-}
-
-.theme-trigger {
-  display: grid;
-  place-items: center;
-  width: 1.95rem;
-  height: 1.95rem;
-  border: 1px solid var(--separator);
-  border-radius: var(--radius-sm);
-  background: var(--bg-secondary);
-  color: var(--label-secondary);
-  cursor: pointer;
-  list-style: none;
-}
-
-.theme-trigger::-webkit-details-marker {
-  display: none;
-}
-
-.theme-list {
-  position: absolute;
-  top: calc(100% + var(--space-2));
-  right: 0;
-  z-index: 200;
-  display: grid;
-  min-width: 10rem;
-  padding: var(--space-1);
-  border: 1px solid var(--separator);
-  border-radius: var(--radius-sm);
-  background: var(--bg-tertiary);
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--ctp-crust) 28%, transparent);
-}
-
-.theme-item {
-  display: grid;
-  grid-template-columns: 1.35rem minmax(0, 1fr);
   align-items: center;
-  gap: var(--space-2);
-  min-height: 2rem;
-  width: 100%;
-  padding: 0 var(--space-2);
-  border: 0;
-  border-radius: calc(var(--radius-sm) - 2px);
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  appearance: none;
+  border: 1px solid var(--separator);
+  border-radius: var(--radius-xs);
   background: transparent;
   color: var(--label-secondary);
   font: inherit;
-  font-size: var(--text-footnote);
-  text-align: left;
+  line-height: 1;
   cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
 }
 
-.theme-trigger:focus-visible,
-.theme-item:focus-visible {
+.theme-toggle:hover {
+  border-color: var(--label-tertiary);
+  background: var(--bg-secondary);
+  color: var(--label-primary);
+}
+
+.theme-toggle:focus-visible {
   outline: 1px solid currentColor;
   outline-offset: 0.18rem;
 }
 
-.theme-item:hover,
-.theme-item.is-active {
-  background: var(--fill-tertiary);
-  color: var(--label-primary);
+.theme-icon {
+  width: 1rem;
+  height: 1rem;
 }
 
-.theme-trigger:hover,
-.theme-menu[open] .theme-trigger {
-  border-color: var(--label-tertiary);
-  background: var(--bg-tertiary);
-  color: var(--label-primary);
+.theme-icon-sun {
+  display: none;
+}
+
+:global([data-theme='mocha']) .theme-icon-moon,
+:global([data-theme='dark']) .theme-icon-moon,
+:global([data-theme='macchiato']) .theme-icon-moon,
+:global([data-theme='frappe']) .theme-icon-moon {
+  display: none;
+}
+
+:global([data-theme='mocha']) .theme-icon-sun,
+:global([data-theme='dark']) .theme-icon-sun,
+:global([data-theme='macchiato']) .theme-icon-sun,
+:global([data-theme='frappe']) .theme-icon-sun {
+  display: block;
 }
 </style>

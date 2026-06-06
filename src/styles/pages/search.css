@@ -23,8 +23,23 @@
   --pagefind-ui-border: var(--separator);
   --pagefind-ui-tag: var(--fill-secondary);
   --pagefind-ui-border-width: 1px;
-  --pagefind-ui-border-radius: var(--radius-lg);
+  --pagefind-ui-border-radius: var(--radius-xs);
   --pagefind-ui-font: var(--font-sans);
+}
+
+.search-ui :global(.pagefind-ui__search-input) {
+  min-height: 2.75rem;
+  padding-block: 0;
+  border-radius: var(--radius-xs);
+}
+
+.search-ui :global(.pagefind-ui__search-clear),
+.search-ui :global(.pagefind-ui__button) {
+  border-radius: var(--radius-xs);
+}
+
+.search-ui :global(.pagefind-ui__result) {
+  padding-block: var(--space-4);
 }
 
 .search-loading {

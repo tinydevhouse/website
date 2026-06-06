@@ -20,37 +20,36 @@
 <script is:inline>
   (function () {
     function mountWaffleSwitch() {
-      var wrap = document.querySelector('[data-waffle-switch]');
+      const wrap = document.querySelector('[data-waffle-switch]');
       if (!wrap || wrap.dataset.ready === 'true') return;
 
-      var waffles = Array.prototype.slice.call(
-        document.querySelectorAll('.prose .waffle')
-      );
+      const waffles = Array.from(document.querySelectorAll('.prose .waffle'));
       if (waffles.length === 0) {
         wrap.remove();
         return;
       }
       wrap.dataset.ready = 'true';
 
-      var button = wrap.querySelector('[data-waffle-toggle]');
-      var readingTime = document.querySelector('[data-reading-time]');
+      const button = wrap.querySelector('[data-waffle-toggle]');
+      const readingTime = document.querySelector('[data-reading-time]');
+      if (!(button instanceof HTMLButtonElement)) return;
 
-      var read = function () {
+      const read = function () {
         try {
           return localStorage.getItem('waffle') || 'on';
-        } catch (e) {
+        } catch {
           return 'on';
         }
       };
-      var write = function (value) {
+      const write = function (value) {
         try {
           localStorage.setItem('waffle', value);
-        } catch (e) {
+        } catch {
           // The toggle still works for the current page without storage.
         }
       };
-      var apply = function (value) {
-        var on = value !== 'off';
+      const apply = function (value) {
+        const on = value !== 'off';
         button.setAttribute('aria-checked', String(on));
         button.textContent = on ? '🧇 on' : '🧇 off';
         waffles.forEach(function (item) {
@@ -67,7 +66,7 @@
       wrap.hidden = false;
 
       button.addEventListener('click', function () {
-        var next = button.getAttribute('aria-checked') === 'true' ? 'off' : 'on';
+        const next = button.getAttribute('aria-checked') === 'true' ? 'off' : 'on';
         apply(next);
         write(next);
       });

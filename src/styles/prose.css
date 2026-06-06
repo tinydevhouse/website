@@ -166,15 +166,21 @@
 }
 
 .prose a {
-  color: var(--color-blue);
+  color: inherit;
+  font-weight: var(--weight-medium);
   text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: text-decoration-color var(--duration-fast) var(--ease-out);
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-decoration-color: currentColor;
+  text-underline-offset: 0.22em;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    text-decoration-style var(--duration-fast) var(--ease-out);
 }
 
 .prose a:hover {
-  text-decoration-color: var(--color-blue);
+  color: var(--label-primary);
+  text-decoration-style: solid;
   opacity: 1;
 }
 
@@ -386,7 +392,7 @@
 }
 
 .prose .waffle-body {
-  margin-block-start: 0px;
+  margin-block-start: 0;
 }
 
 .prose .waffle-body > * {

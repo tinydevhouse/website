@@ -93,7 +93,7 @@ const config = {
     mastodon: '', // e.g. 'https://mastodon.social/@yourhandle'
     devto: '', // e.g. 'https://dev.to/yourhandle'
     linkedin: '', // e.g. 'https://www.linkedin.com/in/yourhandle'
-    github: 'https://github.com/example', // e.g. 'https://github.com/yourhandle'
+    github: 'https://github.com/tinydevhouse', // e.g. 'https://github.com/yourhandle'
   },
 
   about: {

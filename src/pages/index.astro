@@ -1,5 +1,7 @@
 ---
 import '../styles/pages/home.css';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -13,9 +15,17 @@ const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const recentPosts = posts.slice(0, 5);
+const sortProjects = (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) => {
+  const orderA = a.data.projectOrder ?? Number.POSITIVE_INFINITY;
+  const orderB = b.data.projectOrder ?? Number.POSITIVE_INFINITY;
+
+  if (orderA !== orderB) return orderA - orderB;
+
+  return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+};
 const projects = (await getCollection('projects'))
   .filter((p) => !p.data.draft && p.data.featured)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .sort(sortProjects)
   .slice(0, 3);
 ---
 
@@ -42,26 +52,53 @@ const projects = (await getCollection('projects'))
           <ol class="home-project-list">
             {projects.map((project, i) => (
               <li class="home-project-item">
-                <div class="home-project-top">
+                <a
+                  href={withBase(`/projects/${project.id}/`)}
+                  class:list={[
+                    'home-project-link',
+                    project.data.heroImage && 'home-project-link--media',
+                  ]}
+                >
                   <span class="home-project-num" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <a href={withBase(`/projects/${project.id}/`)} class="home-project-name">
-                    {project.data.title}
-                    <span class="home-project-ext-arrow" aria-hidden="true">
-                      ↗
+                  {project.data.heroImage && (
+                    <span class="home-project-media">
+                      <span class="home-project-window-bar" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </span>
+                      <Image
+                        src={project.data.heroImage}
+                        alt=""
+                        class="home-project-img"
+                        widths={[320, 480, 700, 960, 1280]}
+                        sizes="(max-width: 680px) calc(100vw - 3rem), 8.75rem"
+                        quality={88}
+                      />
                     </span>
-                  </a>
-                  <span class="home-project-status">{project.data.status.replace('-', ' ')}</span>
-                </div>
-                <p class="home-project-desc">{project.data.description}</p>
-                {project.data.stack.length > 0 && (
-                  <ul class="home-project-tags" aria-label="Tags">
-                    {project.data.stack.map((tag) => (
-                      <li class="home-project-tag">{tag}</li>
-                    ))}
-                  </ul>
-                )}
+                  )}
+                  <span class="home-project-content">
+                    <span class="home-project-top">
+                      <span class="home-project-name">
+                        {project.data.title}
+                        <span class="home-project-ext-arrow" aria-hidden="true">
+                          ↗
+                        </span>
+                      </span>
+                      <span class="home-project-status">{project.data.status.replace('-', ' ')}</span>
+                    </span>
+                    <span class="home-project-desc">{project.data.description}</span>
+                    {project.data.stack.length > 0 && (
+                      <span class="home-project-tags" aria-label="Tags">
+                        {project.data.stack.map((tag) => (
+                          <span class="home-project-tag">{tag}</span>
+                        ))}
+                      </span>
+                    )}
+                  </span>
+                </a>
               </li>
             ))}
           </ol>
