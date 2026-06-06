@@ -2,7 +2,6 @@
 import config from '../../astro-theme-config';
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import WaffleToggle from './WaffleToggle.astro';
 import { withBase } from '../utils/paths';
 
 const skipLinkLabel = 'Skip to content';
@@ -19,7 +18,6 @@ const navItems = config.nav;
       <div class="nav-links">
         {navItems.map((item) => <HeaderLink href={item.href}>{item.label}</HeaderLink>)}
       </div>
-      <WaffleToggle />
       <ThemeToggle />
     </div>
   </nav>

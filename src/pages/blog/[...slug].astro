@@ -41,12 +41,15 @@ interface Props {
 const { post, relatedProjects, relatedPosts } = Astro.props;
 const { Content } = await render(post);
 
+const bodyWithoutWaffles = (post.body ?? '').replace(/:::waffle[\s\S]*?:::/g, '');
 const readingTime = Math.max(1, Math.round(readingTimeLib(post.body ?? '').minutes));
+const readingTimeWithoutWaffles = Math.max(1, Math.round(readingTimeLib(bodyWithoutWaffles).minutes));
 ---
 
 <BlogPost
   {...post.data}
   readingTime={readingTime}
+  readingTimeWithoutWaffles={readingTimeWithoutWaffles}
   focusEffect={post.data.focusEffect}
   relatedProjects={relatedProjects}
   relatedPosts={relatedPosts}

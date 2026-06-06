@@ -1,0 +1,113 @@
+---
+// Per-post control for the waffle asides on the page. The choice is stored
+// globally (localStorage), so flipping it on any post carries across the site.
+// Hidden by default; the script reveals it only when the post has waffles.
+---
+
+<span class="waffle-switch" data-waffle-switch hidden>
+  <span class="dot">·</span>
+  <button
+    type="button"
+    class="waffle-switch-button"
+    data-waffle-toggle
+    role="switch"
+    aria-checked="true"
+  >
+    🧇 on
+  </button>
+</span>
+
+<script is:inline>
+  (function () {
+    function mountWaffleSwitch() {
+      var wrap = document.querySelector('[data-waffle-switch]');
+      if (!wrap || wrap.dataset.ready === 'true') return;
+
+      var waffles = Array.prototype.slice.call(
+        document.querySelectorAll('.prose .waffle')
+      );
+      if (waffles.length === 0) {
+        wrap.remove();
+        return;
+      }
+      wrap.dataset.ready = 'true';
+
+      var button = wrap.querySelector('[data-waffle-toggle]');
+      var readingTime = document.querySelector('[data-reading-time]');
+
+      var read = function () {
+        try {
+          return localStorage.getItem('waffle') || 'on';
+        } catch (e) {
+          return 'on';
+        }
+      };
+      var write = function (value) {
+        try {
+          localStorage.setItem('waffle', value);
+        } catch (e) {
+          // The toggle still works for the current page without storage.
+        }
+      };
+      var apply = function (value) {
+        var on = value !== 'off';
+        button.setAttribute('aria-checked', String(on));
+        button.textContent = on ? '🧇 on' : '🧇 off';
+        waffles.forEach(function (item) {
+          item.open = on;
+        });
+        if (readingTime) {
+          readingTime.textContent = on
+            ? readingTime.dataset.readingTimeOn
+            : readingTime.dataset.readingTimeOff;
+        }
+      };
+
+      apply(read());
+      wrap.hidden = false;
+
+      button.addEventListener('click', function () {
+        var next = button.getAttribute('aria-checked') === 'true' ? 'off' : 'on';
+        apply(next);
+        write(next);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mountWaffleSwitch, { once: true });
+    } else {
+      mountWaffleSwitch();
+    }
+  })();
+</script>
+
+<style>
+  .waffle-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .waffle-switch-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--label-secondary);
+    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-transform: lowercase;
+    cursor: pointer;
+  }
+
+  .waffle-switch-button:hover {
+    color: var(--label-primary);
+  }
+
+  .waffle-switch-button:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 0.2rem;
+    border-radius: var(--radius-xs);
+  }
+</style>

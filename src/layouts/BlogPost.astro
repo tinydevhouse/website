@@ -6,6 +6,8 @@ import FeaturedPostGrid from '../components/FeaturedPostGrid.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import ScrollFocus from '../components/ScrollFocus.astro';
+import WaffleSwitch from '../components/WaffleSwitch.astro';
+
 import BaseLayout from './BaseLayout.astro';
 import { SITE_AUTHOR, SITE_LANG, SITE_TITLE } from '../consts';
 import { getUiText } from '../ui';
@@ -14,6 +16,7 @@ import { serializeScriptJson } from '../utils/serialize-script-json';
 
 type Props = CollectionEntry<'blog'>['data'] & {
   readingTime?: number;
+  readingTimeWithoutWaffles?: number;
   relatedProjects?: CollectionEntry<'projects'>[];
   relatedPosts?: CollectionEntry<'blog'>[];
 };
@@ -25,6 +28,7 @@ const {
   updatedDate,
   heroImage,
   readingTime,
+  readingTimeWithoutWaffles,
   focusEffect,
   relatedProjects = [],
   relatedPosts = [],
@@ -79,10 +83,18 @@ const jsonLd = serializeScriptJson({
             readingTime && (
               <>
                 <span class="dot">·</span>
-                <span class="meta-item">{tr.readingTime(readingTime)}</span>
+                <span
+                  class="meta-item"
+                  data-reading-time
+                  data-reading-time-on={tr.readingTime(readingTime)}
+                  data-reading-time-off={tr.readingTime(readingTimeWithoutWaffles ?? readingTime)}
+                >
+                  {tr.readingTime(readingTime)}
+                </span>
               </>
             )
           }
+          <WaffleSwitch />
           {
             updatedDate && (
               <>

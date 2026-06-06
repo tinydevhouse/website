@@ -7,8 +7,10 @@ import { defineConfig } from 'astro/config';
 import process from 'node:process';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
+import remarkDirective from 'remark-directive';
 import config from './astro-theme-config.ts';
 import { toneExpressiveCodeOptions } from './src/config/expressive-code.ts';
+import remarkWaffleEmoji from './src/plugins/remark-waffle-emoji.mjs';
 
 // https://astro.build/config
 const sitemapExcludedPaths = new Set(['/search/']);
@@ -44,6 +46,7 @@ export default defineConfig({
   },
 
   markdown: {
+    remarkPlugins: [remarkDirective, remarkWaffleEmoji],
     rehypePlugins: [
       rehypeSlug,
       [

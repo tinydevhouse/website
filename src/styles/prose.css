@@ -354,30 +354,56 @@
   --callout-label: 'Note';
 }
 
-.prose waffle {
-  display: block;
-  margin-block: var(--space-6);
-  padding: 0;
-  color: var(--label-secondary);
-  font-size: inherit;
-  line-height: inherit;
+/* Accordion built at build time by remark-waffle from each :::waffle block. */
+.prose .waffle {
+  margin-block: var(--space-4);
 }
 
-.prose waffle > :where(p, ul, ol) {
+.prose .waffle-summary {
+  display: inline-flex;
+  padding: 0;
+  color: var(--label-quaternary);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-1);
+  line-height: 1;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.prose .waffle-summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose .waffle-summary:hover {
+  color: var(--label-tertiary);
+}
+
+.prose .waffle-summary:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.2rem;
+  border-radius: var(--radius-xs);
+}
+
+.prose .waffle-body {
+  margin-block-start: 0px;
+}
+
+.prose .waffle-body > * {
   margin-block: 0;
 }
 
-.prose waffle > p:first-child::before {
-  content: '🧇';
-  margin-right: 0.35em;
-  font-size: 0.9em;
-  opacity: 0.72;
-}
-
-.prose waffle > :where(* + *) {
+.prose .waffle-body > :where(* + *) {
   margin-block-start: var(--space-3);
 }
 
-[data-waffle='off'] .prose waffle {
-  display: none;
+.prose .waffle[open]::after {
+  content: '</waffle>';
+  display: block;
+  width: max-content;
+  margin-block-start: 7px;
+  color: var(--label-quaternary);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-1);
+  line-height: 1.2;
 }
