@@ -1,11 +1,12 @@
 // @ts-check
 
 import mdx from '@astrojs/mdx';
+import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
-import expressiveCode from 'astro-expressive-code';
 import { defineConfig } from 'astro/config';
 import process from 'node:process';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeExpressiveCode from 'rehype-expressive-code';
 import rehypeSlug from 'rehype-slug';
 import remarkDirective from 'remark-directive';
 import config from './astro-theme-config.ts';
@@ -34,7 +35,6 @@ export default defineConfig({
     enabled: false,
   },
   integrations: [
-    expressiveCode(toneExpressiveCodeOptions),
     mdx(),
     sitemap({
       filter: (page) => !sitemapExcludedPaths.has(withoutConfiguredBase(new URL(page).pathname)),
@@ -46,17 +46,21 @@ export default defineConfig({
   },
 
   markdown: {
-    remarkPlugins: [remarkDirective, remarkWaffleEmoji],
-    rehypePlugins: [
-      rehypeSlug,
-      [
-        rehypeAutolinkHeadings,
-        {
-          behavior: 'append',
-          properties: { ariaHidden: true, tabIndex: -1, class: 'heading-anchor' },
-          content: { type: 'text', value: '#' },
-        },
+    syntaxHighlight: false,
+    processor: unified({
+      remarkPlugins: [remarkDirective, remarkWaffleEmoji],
+      rehypePlugins: [
+        [rehypeExpressiveCode, toneExpressiveCodeOptions],
+        rehypeSlug,
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: 'append',
+            properties: { ariaHidden: true, tabIndex: -1, class: 'heading-anchor' },
+            content: { type: 'text', value: '#' },
+          },
+        ],
       ],
-    ],
+    }),
   },
 });
