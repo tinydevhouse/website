@@ -14,12 +14,13 @@ This started because [I just wanted my photos to be files](/blog/photo-gallery/)
 
 It's a local-first desktop app for managing a personal photo and video library. You point it at a local or mounted folder and the app indexes everything in place. Browse your timeline, search for photos in natural language, see your photos on a map, clear out duplicates, and keep a journal of the days behind the photos.
 
+
+## Features
+
 The whole idea is that nothing is locked away. Your photos and videos stay as plain files in the folders you choose, the journal is plain markdown you can open in any editor, and the index, albums and embeddings live in a single SQLite database that can be exported as JSON. They're all open formats any tool can read. The AI features run entirely on-device, so there are no accounts and your files never leave your drives.
 
 <!-- IMAGE: hero — full-window screenshot of the gallery grid
 ![Photo Gallery — main library view](../../assets/photo-gallery/photo-gallery-main.jpg) -->
-
-## Features
 
 ### Command palette & AI search
 
@@ -41,7 +42,7 @@ Years of DSLR imports, double backups of things I wasn't sure I'd saved, GoPro f
 <!-- GIF: stepping through the duplicate review flow -->
 ![Duplicate review](../../assets/photo-gallery/photo-gallery-duplicates.png)
 
-### Visual clustering
+### Image clustering
 
 Every photo has a CLIP embedding, a high-dimensional vector that captures what's in the shot. Here those vectors are reduced to two dimensions with PCA and laid out as an interactive scatter plot, so visually similar photos end up next to each other.
 
@@ -102,13 +103,11 @@ The everyday stuff a photo app has to get right. Virtualized grid and timeline v
 | **Map** | Leaflet |
 | **Plots** | ECharts and Recharts |
 
-Two chart libraries, on purpose. Recharts (SVG) handles the small dashboard charts with clean React composition, while the cluster view uses ECharts' canvas renderer to stay smooth with thousands of photo points on screen at once.
+A TypeScript/React front end talking to a Rust core over Tauri's IPC bridge. No server, no accounts, no network calls. Recharts handles the small dashboard charts with clean React composition, while the cluster view uses ECharts canvas renderer to stay smooth with thousands of photo points on screen at once.
 
-## How it's built
+## Design decisions
 
-A single desktop binary: a TypeScript/React front end talking to a Rust core over Tauri's IPC bridge. No server, no accounts, no network calls, by design.
-
-### One hard rule: the UI never touches your data
+### The UI never touches the data
 
 The front end can't read the database or the filesystem directly. Not *won't*, *can't*. Rust owns everything durable: scanning, EXIF, embeddings, every background job. React only renders state and calls through a single bridge module.
 
