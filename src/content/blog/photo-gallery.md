@@ -56,9 +56,9 @@ The whole reason I started this. After all those years of fighting to get my own
 
 ## Journal
 
-I had some really niche ideas, like including journaling. I can see how this is not something everyone would use, but to me it makes perfect sense. I take photos to document my life, I love looking back by scrolling my gallery. And as I have been trying to establish a journaling habit, to me there is no better place for it.
+This is a little bit of niche idea. I can see how this is not something everyone would use, but to me it makes perfect sense. I take photos to document my life, I love looking back by scrolling my gallery. And as I have been trying to establish a journaling habit, to me there is no better place for it.
 
-It's perfect to integrate with an Obsidian vault or Logseq graph, since the journals are just markdown files with markdown image links. They are your files, you can view and move your files anywhere. 
+It's perfect to integrate with an Obsidian vault or Logseq graph, since the journals are just markdown files with regular markdown image links. 
 
 ## Embeddings
 

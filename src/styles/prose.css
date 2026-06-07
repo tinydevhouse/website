@@ -212,9 +212,8 @@
 
 .prose img {
   display: block;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--prose-rule);
   margin-inline: auto;
+  clip-path: inset(1px round var(--radius-md));
 }
 
 .prose table {
