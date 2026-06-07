@@ -38,7 +38,7 @@ I also looked into [Immich](https://immich.app) and [PhotoPrism](https://www.pho
 
 All of this led me back to [pCloud](https://www.pcloud.com). Which I have been using for quite a few years after giving up on Dropbox. It beautifully backs up the media from my iPhone and it by default organizes it into year and month folders. Simple 💘
 
-I'm happywith my backup, but I still could not get myself to cancel iCloud. I still want a lot of the functionality from a dedicated photos application.
+I'm happy with my backup, but I still could not get myself to cancel iCloud. I still want a lot of the functionality from a dedicated photos application.
 :::
 
 After fantasying about the perfect photo application for so long, I knew exactly what to build.
@@ -52,41 +52,30 @@ Everything else came from those requirements.
 
 ## Export
 
-The whole reason I started this. The whole library and metadata can be exported into JSON. You know what photos belong to what album, what's a favourite and what's not, and all the exif metadata is also preserved in there. This makes it super easy to parse, migrate and do whatever you want with your data. As it should be! 
+The whole reason I started this. After all those years of fighting to get my own photos out of someone else's system, I wasn't going to build another one, so the first thing I made sure worked was getting everything back out. Albums, favourites, exif, all of it, into one JSON file you can read with your eyes. If I ever want to walk away from my own app, I can. As it should be!
 
 ## Journal
 
 I had some really niche ideas, like including journaling. I can see how this is not something everyone would use, but to me it makes perfect sense. I take photos to document my life, I love looking back by scrolling my gallery. And as I have been trying to establish a journaling habit, to me there is no better place for it.
 
-When I built this, it was following the same principle as everything else: local first, this is just another file the app doesn't own. You get to choose which folder you will use to save your markdown files. So this is perfect to integrate with an Obsidian vault or Logseq graph. The journals are just markdown files with markdown image links.
+It's perfect to integrate with an Obsidian vault or Logseq graph, since the journals are just markdown files with markdown image links. They are your files, you can view and move your files anywhere. 
 
 ## Embeddings
 
-### Cluster view
+I'm a computer vision person, and I really love visualising my datasets by transforming images into embeddings and projecting them into 2D space. Shoutout to FiftyOne for allowing us to do this so easily when working on Machine Learning problems, and being my inspiration for the Cluster view. I have gotten so much insight from my datasets by visualising data this way, and I wanted to bring that to a consumer facing application.
 
-I'm a computer vision person. And I really love visualising my datasets by transforming my images into embeddings and projecting them into 2D space. Shoutout to FiftyOne for allowing us to do this so easily when working on Machine Learning problems. They were my inspiration for the Cluster view. I have got so much insight from my datasets by visualising data this way, and I wanted to bring this to a consumer facing application. I thought it would also be perfect to find similar photos, maybe cull the library, and it's just a neat way to look at your photo library. 
-
-One of the features I'm looking forward to implementing is being able to select parts of the cluster (lasso, polygon or whatever really) and use that as a filter. 
-
-
-### Natural language search
-
-Another cool thing about already having the embeddings is that we can easily implement natural language search. I'm using bundled CLIP models to encode images and text used to search the libraries. This feature is still very basic, it only returns a fixed number of images matching the search. I want to implement something a little smarter, and maybe an option to show on each image how close they are to the search term - this would also be a really neat way to colour the cluster points with continuous values.
+Having the embeddings already there also meant natural language search basically came for free. It's still pretty basic right now, but I'd love to push it further, maybe showing how close each result is to the search term, and using that to colour the cluster points with continuous values too.
 
 ## Dashboard
 
-I love data. And data visualisation, so of course I built a dashboard so I can understand what is in my library. Right now it's pretty basic but it has some cool things. The first plot I wanted to do is a cumulative line plot showing how my library has grown over time - and how photos compare to videos. 
-
-As part of this application is also finding ways to clean up my library, I also have a storage sunburst plot inspired by Filelight, which I absolutely love and always use to figure out what is eating up space in my drives. I thought this would be super helpful to see across all my drives.
+I love data, and data visualisation, so of course I built a dashboard. The storage sunburst plot is inspired by Filelight, which I absolutely love and always use to figure out what's eating up space on my local drive. So I thought it'd be great to have that same view for my photos across all of my drives.
 
 ## Duplicates
 
-Find duplicates across all your drives! This was a big one for me as I have a bunch of different cameras and have been backing up things in different places, and I for sure have thousands of duplicates I'll have to deal with. Importing DSLR images with camera connect into my iCloud library, double backups of things I wasn't sure I saved, GoPro footage imported into iCloud as well as my local drive. You know how it is.
-
-Counting with the fact I'd have to deal with thousands of duplicates, I made sure to include keyboard shortcuts to go through images as quickly as possible. I also want to add some more features here, for example choosing a preferred folder where to keep for some bulk duplicate resolution.
-
-Right now I also only have exact duplicate detection, but with embeddings already calculated, near duplicates are low hanging fruit.
+This was a big one for me. I have a bunch of different cameras and have been backing things up in different places for years, DSLR images imported into iCloud, double backups of things I wasn't sure I'd saved, GoPro footage in both iCloud and on a local drive. You know how it is. And as I knew I'd be looking at thousands of duplicates, going through them quickly was non-negotiable, so of course I included keyboard shortcuts to power through those cleanups.
 
 ## Try it
 
-If this sounds like something that would be useful for you, you can read more about it and sign up for beta testing!
+I'm just really enjoying slowly building my dream app.
+
+If this sounds like something that would be useful for you as well, you can read more about it and sign up for beta testing [here](/projects/photo-gallery/).
