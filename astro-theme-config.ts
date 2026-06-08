@@ -6,14 +6,14 @@ type NavItem = {
 /**
  * astro-theme-config.ts
  *
- * Central configuration for the Astro Tone theme.
+ * Central configuration for the Tiny Dev House website.
  * Most site-level customization should happen in this file.
  */
 
 const config = {
   site: {
     /** Production origin, used for canonical links, sitemap, and Open Graph metadata. */
-    url: 'https://example.com',
+    url: 'https://tinydevhouse.com',
     /** Subpath such as '/repo-name'. Keep empty when deploying at a domain root. */
     base: '',
     lang: 'en',
@@ -21,6 +21,13 @@ const config = {
     dateLocale: 'en-US',
     title: 'Tiny Dev House',
     logoLabel: 'Tiny Dev House',
+    /**
+     * Single monochrome logo placed in `public/`. It replaces the `logoLabel`
+     * text in the header and is painted with the theme's text color via a CSS
+     * mask, so it adapts to light/dark automatically. Only the SVG's shape is
+     * used — its own fill color is ignored. Set to '' to show the text wordmark.
+     */
+    logo: '/logo-dark.svg',
     description: 'Indie software built with care. Local-first tools that respect your data.',
     author: 'Tiny Dev House',
     /** Optional absolute or root-relative image URL for homepage/search/about social previews. */
@@ -88,7 +95,7 @@ const config = {
   },
 
   social: {
-    website: 'https://example.com', // e.g. 'https://your-site.com'
+    website: 'https://tinydevhouse.com', // e.g. 'https://your-site.com'
     email: '', // e.g. 'hello@your-site.com'
     mastodon: '', // e.g. 'https://mastodon.social/@yourhandle'
     devto: '', // e.g. 'https://dev.to/yourhandle'

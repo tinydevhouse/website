@@ -7,6 +7,8 @@ import { withBase } from '../utils/paths';
 const skipLinkLabel = 'Skip to content';
 const navAriaLabel = 'Primary navigation';
 const headerTitle = config.site.logoLabel || config.site.title;
+const logo = config.site.logo;
+const hasLogo = Boolean(logo);
 const navItems = config.nav;
 const githubHref = config.social.github;
 ---
@@ -14,7 +16,19 @@ const githubHref = config.social.github;
 <a href="#main-content" class="skip-link" tabindex="0">{skipLinkLabel}</a>
 <header class="site-header">
   <nav class="nav-inner" aria-label={navAriaLabel}>
-    <a href={withBase('/')} class="nav-logo">{headerTitle}</a>
+    <a href={withBase('/')} class="nav-logo" aria-label={hasLogo ? headerTitle : undefined}>
+      {
+        hasLogo ? (
+          <span
+            class="nav-logo-mark"
+            style={`--logo-src: url('${withBase(logo)}')`}
+            aria-hidden="true"
+          />
+        ) : (
+          headerTitle
+        )
+      }
+    </a>
     <div class="nav-right">
       <div class="nav-links">
         {navItems.map((item) => <HeaderLink href={item.href}>{item.label}</HeaderLink>)}
@@ -170,6 +184,8 @@ const githubHref = config.social.github;
 }
 
 .nav-logo {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-mono);
   font-size: var(--text-headline);
   font-weight: var(--weight-semibold);
@@ -183,6 +199,20 @@ const githubHref = config.social.github;
 
 .nav-logo:hover {
   opacity: 0.7;
+}
+
+/*
+ * Monochrome logo: the SVG is used as a mask and painted with the theme text
+ * color (currentColor), so it adapts to light/dark automatically. The box is
+ * square by default; widen --nav-logo-width for a wide wordmark.
+ */
+.nav-logo-mark {
+  display: block;
+  width: var(--nav-logo-width, 1.75rem);
+  height: var(--nav-logo-height, 1.75rem);
+  background-color: currentColor;
+  -webkit-mask: var(--logo-src) center / contain no-repeat;
+  mask: var(--logo-src) center / contain no-repeat;
 }
 
 .nav-right {
