@@ -69,8 +69,3 @@ on every push to `main`.
 
 No analytics run by default. To opt into Vercel Analytics, set
 `PUBLIC_VERCEL_ANALYTICS=true`.
-
-## License
-
-Source code is MIT licensed. Bundled sample images and project marks are
-documented in `LICENSE`.

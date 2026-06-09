@@ -2,78 +2,230 @@
 import '../styles/pages/about.css';
 import config from '../../astro-theme-config';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import profilePhoto from '../assets/profile.jpeg';
 
-const { lead, statement, interests, principles } = config.about;
-const { github, email, mastodon, devto, linkedin } = config.social;
-
-const links = [
-  github && { label: 'GitHub', href: github },
-  mastodon && { label: 'Mastodon', href: mastodon },
-  devto && { label: 'DEV', href: devto },
-  linkedin && { label: 'LinkedIn', href: linkedin },
-  email && { label: 'Email', href: `mailto:${email}` },
-].filter(Boolean) as { label: string; href: string }[];
+const profileImageUrl = config.about.profileImage.trim() || profilePhoto.src;
+const profileName = 'Sabrina Pereira';
+const profileRole = 'Developer based in Sweden, originally from Brazil.';
+const profileLocation = config.about.location;
+const profileFocus = config.about.focus;
+const profileLead = config.about.lead;
+const profileLeadParagraphs = Array.isArray(profileLead) ? profileLead : [profileLead];
+const [headlineFirst, headlineSecond] = config.about.headline;
+const statementLabel = config.about.statementLabel;
+const statementTitle = config.about.statementTitle;
+const statement = config.about.statement;
+const statementParagraphs = Array.isArray(statement) ? statement : [statement];
+const principles = config.about.principles;
+const profileLinks = [
+  {
+    label: 'GitHub',
+    href: config.social.github,
+  },
+  {
+    label: 'Website',
+    href: config.social.website,
+  },
+  {
+    label: 'LinkedIn',
+    href: config.social.linkedin,
+  },
+  {
+    label: 'Email',
+    href: config.social.email ? `mailto:${config.social.email}` : '',
+  },
+].filter((link) => link.href);
 ---
 
-<BaseLayout title="About" description={lead}>
+<BaseLayout title="About" description={profileLeadParagraphs[0]}>
   <main id="main-content" class="about-main">
+    <section class="about-hero" aria-labelledby="about-title">
+      <div class="about-intro">
+        <p class="section-label">About</p>
+        <h1 id="about-title" class="about-title">
+          {headlineFirst}<br />
+          {headlineSecond}
+        </h1>
+        <div class="about-lead">
+          {profileLeadParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </div>
 
-    <header class="about-header">
-      <p class="about-eyebrow eyebrow-accent">About</p>
-      <h1 class="about-title">Tiny Dev House</h1>
-    </header>
+      <aside class="profile-panel" aria-label="Profile preview">
+        <figure
+          class="profile-media"
+          data-dither-portrait
+          data-dither-grid-size="1"
+          data-dither-primary="var(--bg-primary)"
+          data-dither-secondary="var(--label-primary)"
+          data-dither-threshold="0.5"
+        >
+          <img
+            src={profileImageUrl}
+            width="720"
+            height="720"
+            alt={`${profileName} profile portrait`}
+            loading="eager"
+            referrerpolicy="no-referrer"
+          />
+          <canvas aria-hidden="true"></canvas>
+        </figure>
 
-    <section class="about-bio">
-      <p>{lead}</p>
-      <p>{statement}</p>
+        <div class="profile-summary">
+          <p class="profile-name">{profileName}</p>
+          <p class="profile-role">{profileRole}</p>
+        </div>
+
+        <dl class="profile-meta">
+          <div>
+            <dt>Location</dt>
+            <dd>{profileLocation}</dd>
+          </div>
+          <div>
+            <dt>Focus</dt>
+            <dd>{profileFocus}</dd>
+          </div>
+          {
+            profileLinks.length > 0 && (
+              <div>
+                <dt>Links</dt>
+                <dd class="profile-links">
+                  {profileLinks.map((link) => (
+                    <a
+                      href={link.href}
+                      target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                      rel={link.href.startsWith('mailto:') ? undefined : 'noopener'}
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+      </aside>
     </section>
 
-    {principles && principles.length > 0 && (
-      <>
-        <hr class="about-rule" />
-        <section class="about-section" aria-labelledby="about-principles">
-          <h2 id="about-principles" class="about-section-heading">Principles</h2>
-          <ol class="about-principles">
-            {principles.map((p) => (
-              <li>
-                <div class="principle-text"><strong>{p.title}</strong>{' '}{p.body}</div>
-              </li>
-            ))}
-          </ol>
-          <p class="about-note">Rough and evolving.</p>
-        </section>
-      </>
-    )}
+    <section class="about-section about-statement" aria-labelledby="about-statement">
+      <p class="section-label">{statementLabel}</p>
+      <div>
+        <h2 id="about-statement" class="section-heading">
+          {statementTitle}
+        </h2>
+        {statementParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </section>
 
-    {interests && interests.length > 0 && (
-      <>
-        <hr class="about-rule" />
-        <section class="about-section" aria-labelledby="about-interests">
-          <h2 id="about-interests" class="about-section-heading">Interests</h2>
-          <ul class="about-list">
-            {interests.map((item) => <li>{item}</li>)}
-          </ul>
-        </section>
-      </>
-    )}
-
-    <hr class="about-rule" />
-
-    <footer class="about-footer">
-      {links.length > 0 && (
-        <nav class="about-links" aria-label="Social links">
-          {links.map((link, i) => (
-            <>
-              {i > 0 && <span aria-hidden="true"> · </span>}
-              <a href={link.href} target={link.href.startsWith('mailto:') ? undefined : '_blank'} rel={link.href.startsWith('mailto:') ? undefined : 'noopener'}>
-                {link.label}
-              </a>
-            </>
+    {principles.length > 0 && (
+      <section class="about-section" aria-labelledby="about-principles">
+        <p class="section-label">Principles</p>
+        <ol id="about-principles" class="principles-list">
+          {principles.map((principle) => (
+            <li>
+              <div>
+                <strong>{principle.title}</strong>
+                <span>{principle.body}</span>
+              </div>
+            </li>
           ))}
-        </nav>
-      )}
-      <p class="about-planted">Say hello.</p>
-    </footer>
-
+        </ol>
+      </section>
+    )}
   </main>
 </BaseLayout>
+
+<script>
+  const matrix = [
+    [0, 8, 2, 10],
+    [12, 4, 14, 6],
+    [3, 11, 1, 9],
+    [15, 7, 13, 5],
+  ];
+
+  const parseColor = (value: string) => {
+    const probe = document.createElement('span');
+    probe.style.color = value;
+    document.body.append(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+
+    const channels = color.match(/\d+(\.\d+)?/g)?.map(Number) ?? [0, 0, 0];
+    return channels.slice(0, 3);
+  };
+
+  const drawPortrait = (figure: Element) => {
+    const image = figure.querySelector('img');
+    const canvas = figure.querySelector('canvas');
+
+    if (!(image instanceof HTMLImageElement) || !(canvas instanceof HTMLCanvasElement)) return;
+
+    const paint = () => {
+      const rect = figure.getBoundingClientRect();
+      const size = Math.max(1, Math.round(Math.min(rect.width, rect.height)));
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const step = Number(figure.getAttribute('data-dither-grid-size')) || 1;
+      const threshold = Number(figure.getAttribute('data-dither-threshold')) || 0.45;
+      const width = Math.round(size * dpr);
+      const height = Math.round(size * dpr);
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const scratch = document.createElement('canvas');
+      scratch.width = Math.ceil(width / step);
+      scratch.height = Math.ceil(height / step);
+
+      const source = scratch.getContext('2d', { willReadFrequently: true });
+      const target = canvas.getContext('2d');
+      if (!source || !target) return;
+
+      const cropSize = Math.min(image.naturalWidth, image.naturalHeight);
+      const sx = (image.naturalWidth - cropSize) / 2;
+      const sy = (image.naturalHeight - cropSize) / 2;
+
+      source.drawImage(image, sx, sy, cropSize, cropSize, 0, 0, scratch.width, scratch.height);
+
+      const pixels = source.getImageData(0, 0, scratch.width, scratch.height).data;
+      const primary = parseColor(figure.getAttribute('data-dither-primary') || 'var(--bg-primary)');
+      const secondary = parseColor(figure.getAttribute('data-dither-secondary') || 'var(--label-primary)');
+      const output = target.createImageData(width, height);
+
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          const sampleX = Math.floor(x / step);
+          const sampleY = Math.floor(y / step);
+          const sample = (sampleY * scratch.width + sampleX) * 4;
+          const luma = (pixels[sample] * 0.299 + pixels[sample + 1] * 0.587 + pixels[sample + 2] * 0.114) / 255;
+          const bayer = (matrix[sampleY % 4][sampleX % 4] + 0.5) / 16;
+          const dithered = luma + (bayer - 0.5) * 0.32;
+          const color = dithered < threshold ? primary : secondary;
+          const index = (y * width + x) * 4;
+
+          output.data[index] = color[0];
+          output.data[index + 1] = color[1];
+          output.data[index + 2] = color[2];
+          output.data[index + 3] = 255;
+        }
+      }
+
+      target.putImageData(output, 0, 0);
+      figure.setAttribute('data-dither-ready', 'true');
+    };
+
+    if (image.complete) {
+      paint();
+    } else {
+      image.addEventListener('load', paint, { once: true });
+    }
+
+    window.addEventListener('resize', paint);
+
+    new MutationObserver(paint).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+  };
+
+  document.querySelectorAll('[data-dither-portrait]').forEach(drawPortrait);
+</script>

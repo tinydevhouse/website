@@ -58,17 +58,17 @@ The whole reason I started this. After all those years of fighting to get my own
 
 This is a little bit of niche idea. I can see how this is not something everyone would use, but to me it makes perfect sense. I take photos to document my life, I love looking back by scrolling my gallery. And as I have been trying to establish a journaling habit, to me there is no better place for it.
 
-It's perfect to integrate with an Obsidian vault or Logseq graph, since the journals are just markdown files with regular markdown image links. 
+It's perfect to integrate with an [Obsidian](https://obsidian.md) vault or [Logseq](https://logseq.com) graph, since the journals are just markdown files with regular markdown image links. 
 
 ## Embeddings
 
-I'm a computer vision person, and I really love visualising my datasets by transforming images into embeddings and projecting them into 2D space. Shoutout to FiftyOne for allowing us to do this so easily when working on Machine Learning problems, and being my inspiration for the Cluster view. I have gotten so much insight from my datasets by visualising data this way, and I wanted to bring that to a consumer facing application.
+I'm a computer vision person, and I really love visualising my datasets by transforming images into embeddings and projecting them into 2D space. Shoutout to [FiftyOne](https://voxel51.com/fiftyone) for allowing us to do this so easily when working on Machine Learning problems. And for being my inspiration for the Cluster view. I have gotten so much insight from my datasets by visualising data this way, and I wanted to bring that to a consumer facing application.
 
 Having the embeddings already there also meant natural language search basically came for free. It's still pretty basic right now, but I'd love to push it further, maybe showing how close each result is to the search term, and using that to colour the cluster points with continuous values too.
 
 ## Dashboard
 
-I love data, and data visualisation, so of course I built a dashboard. The storage sunburst plot is inspired by Filelight, which I absolutely love and always use to figure out what's eating up space on my local drive. So I thought it'd be great to have that same view for my photos across all of my drives.
+I love data, and data visualisation, so of course I built a dashboard that's just a little extra. Including a sunburst plot to vizulise storage inspired by [Filelight](https://apps.kde.org/filelight/) (which I absolutely love and always use to figure out what's eating up space on my local drive). So I thought it'd be great to have that a similar view for my photos and videos across all of my drives.
 
 ## Duplicates
 
