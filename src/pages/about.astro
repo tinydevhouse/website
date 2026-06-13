@@ -5,10 +5,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import profilePhoto from '../assets/profile.jpeg';
 
 const profileImageUrl = config.about.profileImage.trim() || profilePhoto.src;
-const profileName = 'Sabrina Pereira';
-const profileRole = 'Developer based in Sweden, originally from Brazil.';
+const profileName = config.about.name;
+const profileRole = config.about.role;
 const profileLocation = config.about.location;
-const profileFocus = config.about.focus;
+const profileInterests = config.about.interests;
 const profileLead = config.about.lead;
 const profileLeadParagraphs = Array.isArray(profileLead) ? profileLead : [profileLead];
 const [headlineFirst, headlineSecond] = config.about.headline;
@@ -17,24 +17,20 @@ const statementTitle = config.about.statementTitle;
 const statement = config.about.statement;
 const statementParagraphs = Array.isArray(statement) ? statement : [statement];
 const principles = config.about.principles;
-const profileLinks = [
-  {
-    label: 'GitHub',
-    href: config.social.github,
-  },
-  {
-    label: 'Website',
-    href: config.social.website,
-  },
-  {
-    label: 'LinkedIn',
-    href: config.social.linkedin,
-  },
-  {
-    label: 'Email',
-    href: config.social.email ? `mailto:${config.social.email}` : '',
-  },
-].filter((link) => link.href);
+const socialLabels: Record<string, string> = {
+  website: 'Website',
+  github: 'GitHub',
+  linkedin: 'LinkedIn',
+  devto: 'DEV',
+  mastodon: 'Mastodon',
+  email: 'Email',
+};
+const profileLinks = Object.entries(config.social)
+  .map(([key, value]) => ({
+    label: socialLabels[key] ?? key,
+    href: key === 'email' && value ? `mailto:${value}` : value,
+  }))
+  .filter((link) => link.href);
 ---
 
 <BaseLayout title="About" description={profileLeadParagraphs[0]}>
@@ -82,8 +78,8 @@ const profileLinks = [
             <dd>{profileLocation}</dd>
           </div>
           <div>
-            <dt>Focus</dt>
-            <dd>{profileFocus}</dd>
+            <dt>Interests</dt>
+            <dd>{profileInterests}</dd>
           </div>
           {
             profileLinks.length > 0 && (

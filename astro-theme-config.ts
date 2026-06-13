@@ -30,6 +30,7 @@ const config = {
     logo: '/logo-dark.svg',
     description: 'Indie software built with care. Local-first tools that respect your data.',
     author: 'Tiny Dev House',
+    github: 'https://github.com/tinydevhouse',
     /** Optional absolute or root-relative image URL for homepage/search/about social previews. */
     defaultOgImage: '/og.png',
   },
@@ -95,79 +96,48 @@ const config = {
   },
 
   social: {
-    website: 'https://tinydevhouse.com', // e.g. 'https://your-site.com'
-    email: 'sabrina@tinydevhouse.com', // e.g. 'hello@your-site.com'
-    mastodon: '', // e.g. 'https://mastodon.social/@yourhandle'
-    devto: '', // e.g. 'https://dev.to/yourhandle'
-    linkedin: 'https://www.linkedin.com/in/sabrinafpereira/', // e.g. 'https://www.linkedin.com/in/yourhandle'
+    // website: 'https://tinydevhouse.com', // e.g. 'https://your-site.com'
     github: 'https://github.com/sf-pear', // e.g. 'https://github.com/yourhandle'
+    linkedin: 'https://www.linkedin.com/in/sabrinafpereira/', // e.g. 'https://www.linkedin.com/in/yourhandle'
+    devto: 'https://dev.to/sfpear', // e.g. 'https://dev.to/yourhandle'
+    // mastodon: '', // e.g. 'https://mastodon.social/@yourhandle'
+    email: 'sabrina@tinydevhouse.com', // e.g. 'hello@your-site.com'
   },
 
   about: {
     /** Profile image URL. Leave empty to use the text-only About layout. */
     profileImage: '',
-    name: 'Tiny Dev House',
-    role: 'Independent software studio in Sweden.',
+    name: 'Sabrina Pereira',
+    role: 'Building and shipping after bedtime.',
     location: 'Sweden',
-    focus: 'AI/ML engineering, computer vision, LLM agents, GraphRAG, and local-first tools.',
+    // interests: 'Creating tools that bring interesting machine learning concepts to consumer applications.',
+    interests: 'Software development, machine learning, data science, and visualization. And other equally fun things, like roller skating and sipping coconuts at the beach.',
     lead: [
-      'A one-person software studio creating opinionated tools that respect your data.',
-      // 'I build local-first apps, clean exports, on-device AI, and desktop software that feels calm, useful, and carefully made. No tracking by default. No lock-in disguised as convenience. No giant platform ambitions.',
-      // 'Just focused tools with a point of view — built by someone who cares about the details.',
+      'An indie software studio creating tools that feel great to use and respect your data.',
     ],
     headline: ['Tiny Dev', 'House'],
     statementLabel: 'Position',
     statementTitle: 'Indie software built with care.',
     statement: [
-      'I care about software that feels thoughtfully made — not just functional, but calm, fast, clear. Something you truly love to use. Tools that do not harvest your data, trap your files, or turn every useful feature into a subscription.',
-      'Most of what I build starts from a personal frustration: a workflow that should be simpler, a desktop tool that should exist, or an AI feature that should run closer to where the data actually lives.',
-      'Tiny Dev House is a place for software built with love with sharp edges in all the right places.',
+      'Tiny Dev House is about building thoughtful software that brings interesting machine learning concepts to consumer applications in a way we don\'t usually see. Applications that are beautiful, powerful, and truly enjoyable to use. Most of what you find here began as tools for solving probably way too specific and personal problems. But as I used and improved them, they grew into something I thought could be genuinely useful to others.',
+      'I believe our data should be ours, so I focus on keeping it safe while still creating value from it on our own machines. I am tired of proprietary data formats and being stuck in someone else\'s system.',
+      'This is my way to resist.',
+      // 'I care about software that feels thoughtfully made — not just functional, but calm, fast, clear. Something you truly love to use. Tools that do not harvest your data, trap your files, or turn every useful feature into a subscription.',
+      // 'Most of what I build starts from a personal frustration: a workflow that should be simpler, a desktop tool that should exist, or an AI feature that should run closer to where the data actually lives.',
+      // 'Tiny Dev House is a place for software built with love with sharp edges in all the right places.',
     ],
-    personalStatement:
-      'I\'m Sabrina, a developer based in Sweden, originally from Brazil. My day job is AI/ML engineering at Knightec Group, mostly around computer vision, LLM agents, GraphRAG and predictive models. Before that I studied design, and before that I was a kid making Geocities-era websites for friends. Tiny Dev House happens around work and parenting, usually in the quieter parts of the day. That is part of the point too: serious software can come from a full life, a busy life, a life with a toddler in it.',
-    careerLabel: 'Log',
-    careerHeading: 'Studio log',
-    career: [
-      {
-        period: 'Current',
-        title: 'Tiny Dev House',
-        description:
-          'Building independent software projects, writing field notes, and keeping the infrastructure deliberately simple.',
-      },
-      {
-        period: 'Ongoing',
-        title: 'Local-first experiments',
-        description:
-          'Testing sync models, SQLite-shaped product decisions, and interfaces that do not need a platform account to be useful.',
-      },
-      {
-        period: 'Always',
-        title: 'Repair culture',
-        description:
-          'Preferring tools that can be inspected, exported, backed up, and fixed without begging a vendor dashboard.',
-      },
-    ],
-    interests: [
-      'Local-first apps, on-device AI, and interfaces that make messy personal data feel manageable',
-      'Tools with personality: Logseq, Vivaldi, PowerToys, ShareX, Ueli',
-      'The old personal web, pixel art, games, fantasy and sci-fi',
-      'Roller derby, biking around Gothenburg, and getting near the ocean whenever possible',
-      'Good coffee, Nordic noir, and building things after bedtime',
-    ],
-    interestsLabel: 'Biases',
-    interestsHeading: 'What the work keeps returning to',
     principles: [
       {
         title: 'Built with care.',
-        body: 'A tool should feel like someone thought about the details. Delight is not polish added at the end; it is part of the reason the thing exists.',
+        body: 'We care deeply about user experience and believe software should feel like there is care in the details. Polish is not just about looks but how it feels to use an application and the principles behind it.',
       },
       {
-        title: 'Local-first when it matters.',
-        body: 'Personal software should run on your machine, keep working offline, and put as few accounts and servers as possible between you and your own stuff.',
+        title: 'Your data is yours.',
+        body: 'No vendor lock-in. Your files and the value created through metadata generation should be yours to keep and use as you want.',
       },
       {
-        title: 'Yours to keep.',
-        body: 'No lock-in. No subscription holding your files hostage. Export matters because leaving should always be allowed.',
+        title: 'Powerful and local.',
+        body: 'Powerful AI features should not be defined by sending off your data to someone else\'s servers. We want to give users useful features that can run on their own machines and without a network connection.',
       },
     ],
   },

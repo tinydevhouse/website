@@ -12,12 +12,10 @@ Why does it have to be so goddamn hard to move a photo library?
 
 I've been using Apple Photos and carefully curating albums for over a decade. The photos themselves aren't the problem. I can export photos. The problem is everything around them.
 
-Albums.  
-Favorites.  
-Losing how I organized my memories across all those years.  
+Albums. Favorites. Losing how I organized my memories across all those years.
 
 :::waffle
-Every time I looked into migrating away from iCloud I ended up resigning and paying for yet another month instead of dealing with losing my organisational layer. 
+Every time I looked into migrating away from iCloud I ended up resigning and paying for yet another month instead of dealing with losing my organisational layer.
 
 At one point I tried moving to Google Photos instead. That wasn't much better. I paid for Google Photos for a while and it just felt like my photos were trapped again. And I also discovered the nightmarish process of removing all my media from Google Photos. Never again.
 
@@ -28,10 +26,9 @@ I had so much hope for this one but again, the photos weren't just files in Prot
 
 I just want my photos to be files!
 
-Files in directories.  
-On storage that I control.  
+Files in directories. On storage that I control.
 
-Surely this is not too much to ask? 
+Surely this is not too much to ask?
 
 :::waffle
 I also looked into [Immich](https://immich.app) and [PhotoPrism](https://www.photoprism.app) but yeah, nah. That's not what I wanted. I don't want to set up a home server. I want to point to any folder in my computer into an app where I can manage my photos.
@@ -44,6 +41,7 @@ I'm happy with my backup, but I still could not get myself to cancel iCloud. I s
 After fantasying about the perfect photo application for so long, I knew exactly what to build.
 
 The goals were pretty simple:
+
 - My media stays where it is
 - The application is a layer on top of the filesystem
 - Albums, favorites, and metadata should be portable
@@ -58,7 +56,7 @@ The whole reason I started this. After all those years of fighting to get my own
 
 This is a little bit of niche idea. I can see how this is not something everyone would use, but to me it makes perfect sense. I take photos to document my life, I love looking back by scrolling my gallery. And as I have been trying to establish a journaling habit, to me there is no better place for it.
 
-It's perfect to integrate with an [Obsidian](https://obsidian.md) vault or [Logseq](https://logseq.com) graph, since the journals are just markdown files with regular markdown image links. 
+It's perfect to integrate with an [Obsidian](https://obsidian.md) vault or [Logseq](https://logseq.com) graph, since the journals are just markdown files with regular markdown image links.
 
 ## Embeddings
 
