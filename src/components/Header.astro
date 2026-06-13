@@ -15,7 +15,7 @@ const githubHref = config.site.github;
 
 <a href="#main-content" class="skip-link" tabindex="0">{skipLinkLabel}</a>
 <header class="site-header">
-  <nav class="nav-inner" aria-label={navAriaLabel}>
+  <nav class="nav-inner shell-inner" aria-label={navAriaLabel}>
     <a href={withBase('/')} class="nav-logo" aria-label={hasLogo ? headerTitle : undefined}>
       {
         hasLogo ? (
@@ -87,8 +87,7 @@ const githubHref = config.site.github;
             <path d="M21 21l-6 -6"></path>
           </svg>
           <span class="nav-search-shortcut" aria-hidden="true">
-            <kbd>Ctrl</kbd>
-            <kbd>K</kbd>
+            <kbd>Ctrl + K</kbd>
           </span>
         </button>
       </div>
@@ -177,9 +176,6 @@ const githubHref = config.site.github;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: var(--site-shell-width);
-  margin: 0 auto;
-  padding: 0 var(--site-shell-padding);
   height: 100%;
 }
 
@@ -283,32 +279,16 @@ const githubHref = config.site.github;
 
 .nav-search-shortcut {
   display: inline-flex;
-  gap: 0.15rem;
   align-items: center;
+  height: 1rem;
 }
 
 .nav-search-shortcut kbd {
-  min-width: 1rem;
-  padding: 0.1rem 0.24rem;
-  border: 1px solid var(--separator);
-  border-radius: var(--radius-xs);
-  background: var(--bg-secondary);
-  color: var(--label-tertiary);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption-2);
-  line-height: 1;
-}
-
-.nav-search-button:hover .nav-search-shortcut kbd {
-  border-color: var(--label-tertiary);
-  color: var(--label-secondary);
+  min-width: 3.1rem;
+  height: 1rem;
 }
 
 @media (max-width: 600px) {
-  .nav-inner {
-    padding: 0 var(--site-shell-padding-mobile);
-  }
-
   .nav-right {
     gap: var(--space-2);
     margin-right: 0;

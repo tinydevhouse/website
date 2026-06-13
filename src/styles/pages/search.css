@@ -1,7 +1,6 @@
 .search-main {
-  max-width: var(--site-shell-width);
-  margin: 0 auto;
-  padding: var(--space-10) var(--site-shell-padding) var(--space-16);
+  --page-shell-padding-top: var(--space-10);
+  --page-shell-padding-bottom: var(--space-16);
 }
 
 .search-header {

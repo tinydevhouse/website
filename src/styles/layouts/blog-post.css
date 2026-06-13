@@ -1,9 +1,10 @@
 @import url('toc-rail/style.css');
 
 .post-main {
-  max-width: var(--site-shell-width);
-  margin: 0 auto;
-  padding: var(--space-20) var(--site-shell-padding) var(--space-24);
+  --page-shell-padding-top: var(--space-20);
+  --page-shell-padding-bottom: var(--space-24);
+  --page-shell-padding-top-mobile: var(--space-12);
+  --page-shell-padding-bottom-mobile: var(--space-16);
 }
 
 .back-link,
@@ -163,8 +164,3 @@
 }
 
 /* ── Mobile ─────────────────────────────── */
-@media (max-width: 600px) {
-  .post-main {
-    padding: var(--space-12) var(--site-shell-padding-mobile) var(--space-16);
-  }
-}

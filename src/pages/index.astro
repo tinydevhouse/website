@@ -30,7 +30,7 @@ const projects = (await getCollection('projects'))
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <main id="main-content" class="home-main">
+  <main id="main-content" class="home-main page-shell">
     <section class="home-hero">
       <h1 class="home-hero-title">
         <span>Tiny</span>
@@ -49,17 +49,18 @@ const projects = (await getCollection('projects'))
               All projects ↗
             </a>
           </div>
-          <ol class="home-project-list">
+          <ol class="home-project-list index-list">
             {projects.map((project, i) => (
               <li class="home-project-item">
                 <a
                   href={withBase(`/projects/${project.id}/`)}
                   class:list={[
                     'home-project-link',
+                    'index-link',
                     project.data.heroImage && 'home-project-link--media',
                   ]}
                 >
-                  <span class="home-project-num" aria-hidden="true">
+                  <span class="home-project-num index-num" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   {project.data.heroImage && (
@@ -91,9 +92,9 @@ const projects = (await getCollection('projects'))
                     </span>
                     <span class="home-project-desc">{project.data.description}</span>
                     {project.data.stack.length > 0 && (
-                      <span class="home-project-tags" aria-label="Tags">
+                      <span class="home-project-tags index-tags" aria-label="Tags">
                         {project.data.stack.map((tag) => (
-                          <span class="home-project-tag">{tag}</span>
+                          <span class="home-project-tag index-tag">{tag}</span>
                         ))}
                       </span>
                     )}
@@ -115,18 +116,18 @@ const projects = (await getCollection('projects'))
               All posts ↗
             </a>
           </div>
-          <ol class="home-post-list">
+          <ol class="home-post-list index-list">
             {recentPosts.map((post, i) => (
               <li class="home-post-item">
-                <a href={withBase(`/blog/${post.id}/`)} class="home-post-link">
-                  <span class="home-post-num" aria-hidden="true">
+                <a href={withBase(`/blog/${post.id}/`)} class="home-post-link index-link">
+                  <span class="home-post-num index-num" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span class="home-post-title">{post.data.title}</span>
-                  <span class="home-post-date">
+                  <span class="home-post-title index-title">{post.data.title}</span>
+                  <span class="home-post-date index-date">
                     <FormattedDate date={post.data.pubDate} />
                   </span>
-                  <span class="home-post-arrow" aria-hidden="true">
+                  <span class="home-post-arrow index-arrow" aria-hidden="true">
                     ↗
                   </span>
                 </a>

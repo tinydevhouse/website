@@ -8,7 +8,7 @@ const footerLinks = config.footerNav.filter((item) => item.href !== '/');
 ---
 
 <footer class="site-footer">
-  <div class="footer-inner">
+  <div class="footer-inner shell-inner">
     <p class="footer-copy">
       &copy; {today.getFullYear()}
       {footerTitle}.
@@ -39,9 +39,6 @@ const footerLinks = config.footerNav.filter((item) => item.href !== '/');
 }
 
 .footer-inner {
-  max-width: var(--site-shell-width);
-  margin: 0 auto;
-  padding: 0 var(--site-shell-padding);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -89,7 +86,6 @@ const footerLinks = config.footerNav.filter((item) => item.href !== '/');
   }
 
   .footer-inner {
-    padding: 0 var(--site-shell-padding-mobile);
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

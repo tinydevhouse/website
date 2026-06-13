@@ -8,8 +8,6 @@
   --prose-soft: var(--label-tertiary);
   --prose-rule: color-mix(in srgb, var(--separator) 72%, transparent);
   --prose-marker: color-mix(in srgb, var(--color-blue) 70%, var(--label-secondary) 30%);
-  --prose-kbd-bg: color-mix(in srgb, var(--label-primary) 5%, var(--bg-primary));
-  --prose-kbd-border: color-mix(in srgb, var(--label-primary) 16%, transparent);
   --prose-mark-bg: color-mix(in srgb, var(--color-blue) 22%, transparent);
   --prose-mark-fg: var(--label-primary);
 
@@ -247,21 +245,6 @@
   text-decoration-style: dotted;
   text-decoration-color: var(--prose-soft);
   text-underline-offset: 0.16em;
-}
-
-.prose kbd {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.55em;
-  padding: 0 0.44em;
-  font-family: var(--font-mono);
-  font-size: 0.78em;
-  font-weight: 500;
-  color: var(--label-primary);
-  background: var(--prose-kbd-bg);
-  border: 1px solid var(--prose-kbd-border);
-  border-radius: var(--radius-sm);
-  box-shadow: inset 0 -1px 0 var(--prose-kbd-border);
 }
 
 .prose mark {

@@ -49,3 +49,20 @@ select {
   font-family: var(--font-sans);
   font-size: var(--text-body);
 }
+
+kbd {
+  appearance: none;
+  display: inline-grid;
+  place-items: center;
+  min-height: 1rem;
+  padding: 0 0.35rem;
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: var(--bg-secondary);
+  color: var(--label-tertiary);
+  box-shadow: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-caption-2);
+  font-weight: var(--weight-regular);
+  line-height: 1;
+}

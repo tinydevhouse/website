@@ -116,7 +116,7 @@ const config = {
       'An indie software studio creating tools that feel great to use and respect your data.',
     ],
     headline: ['Tiny Dev', 'House'],
-    statementLabel: 'Position',
+    statementLabel: 'Statement',
     statementTitle: 'Indie software built with care.',
     statement: [
       'Tiny Dev House is about building thoughtful software that brings interesting machine learning concepts to consumer applications in a way we don\'t usually see. Applications that are beautiful, powerful, and truly enjoyable to use. Most of what you find here began as tools for solving probably way too specific and personal problems. But as I used and improved them, they grew into something I thought could be genuinely useful to others.',
@@ -128,15 +128,15 @@ const config = {
     ],
     principles: [
       {
-        title: 'Built with care.',
+        title: 'Built with care',
         body: 'We care deeply about user experience and believe software should feel like there is care in the details. Polish is not just about looks but how it feels to use an application and the principles behind it.',
       },
       {
-        title: 'Your data is yours.',
+        title: 'Your data is yours',
         body: 'No vendor lock-in. Your files and the value created through metadata generation should be yours to keep and use as you want.',
       },
       {
-        title: 'Powerful and local.',
+        title: 'Powerful and local',
         body: 'Powerful AI features should not be defined by sending off your data to someone else\'s servers. We want to give users useful features that can run on their own machines and without a network connection.',
       },
     ],

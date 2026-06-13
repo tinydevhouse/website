@@ -146,7 +146,7 @@ const Heading = headingLevel;
     )
   }
 
-  <ol class="feed-list">
+  <ol class="feed-list index-list">
     {
       posts.map((post, index) => (
         <li
@@ -156,8 +156,10 @@ const Heading = headingLevel;
           data-search={`${post.data.title} ${post.data.description} ${post.data.category ?? ''}`.toLocaleLowerCase()}
           data-index={index}
         >
-          <a href={withBase(`${basePath}/${postSlug(post.id)}/`)} class="feed-link">
-            <FormattedDate class="feed-date" date={post.data.pubDate} />
+          <a href={withBase(`${basePath}/${postSlug(post.id)}/`)} class="feed-link index-link">
+            <span class="feed-num index-num" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
             <div class="feed-body">
               <Heading class="feed-title">{post.data.title}</Heading>
               {post.data.description && <p class="feed-desc">{post.data.description}</p>}
@@ -167,7 +169,8 @@ const Heading = headingLevel;
                 </div>
               )}
             </div>
-            <span class="feed-arrow" aria-hidden="true">
+            <FormattedDate class="feed-date index-date" date={post.data.pubDate} />
+            <span class="feed-arrow index-arrow" aria-hidden="true">
               ↗
             </span>
             <span class="sr-only">{labels.read}</span>
@@ -199,7 +202,6 @@ const Heading = headingLevel;
 
 <style>
 .post-feed {
-  --feed-date-column: 7.375rem;
   --feed-control-height: 2rem;
   --feed-more-height: 2.5rem;
   --feed-hover-shift: 0.125rem;
@@ -248,7 +250,7 @@ const Heading = headingLevel;
 }
 
 .feed-filter {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -499,12 +501,6 @@ const Heading = headingLevel;
     center / contain no-repeat;
 }
 
-.feed-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
 .feed-item {
   border-bottom: 1px solid var(--separator);
 }
@@ -514,28 +510,24 @@ const Heading = headingLevel;
 }
 
 .feed-link {
-  display: grid;
-  grid-template-columns: var(--feed-date-column) minmax(0, 1fr) auto;
-  gap: var(--space-5);
+  grid-template-columns: 2.5rem minmax(0, 1fr) max-content auto;
   align-items: baseline;
   padding: var(--space-5) 0;
-  color: inherit;
-  text-decoration: none;
 }
 
-.feed-link:hover {
-  opacity: 1;
+.feed-num {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .feed-link :global(.feed-date) {
-  font-family: var(--font-mono);
-  color: var(--label-tertiary);
-  font-size: var(--text-footnote);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  grid-column: 3;
+  grid-row: 1;
 }
 
 .feed-body {
+  grid-column: 2;
+  grid-row: 1;
   min-width: 0;
 }
 
@@ -573,17 +565,15 @@ const Heading = headingLevel;
   color: var(--color-blue);
   font-size: var(--text-caption-2);
   font-weight: var(--weight-semibold);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .feed-arrow {
-  color: var(--label-quaternary);
+  grid-column: 4;
+  grid-row: 1;
   font-size: var(--text-callout);
-  transition:
-    color var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
 }
 
 .feed-link:hover .feed-arrow {
@@ -654,13 +644,21 @@ const Heading = headingLevel;
   }
 
   .feed-link {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
     gap: var(--space-3);
     padding: var(--space-5) 0;
   }
 
+  .feed-body,
+  .feed-arrow,
+  .feed-num {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .feed-link :global(.feed-date) {
-    grid-column: 1 / -1;
+    grid-column: 2;
+    grid-row: 2;
   }
 
   .feed-title {

@@ -1,7 +1,7 @@
 .not-found-main {
-  max-width: var(--site-shell-width);
-  margin: 0 auto;
-  padding: var(--space-10) var(--site-shell-padding) var(--space-24);
+  --page-shell-padding-top: var(--space-10);
+  --page-shell-padding-bottom: var(--space-24);
+
   min-height: calc(100dvh - var(--nav-height) - 120px);
   display: flex;
   align-items: center;
