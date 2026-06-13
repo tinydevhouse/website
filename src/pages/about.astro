@@ -113,21 +113,23 @@ const profileLinks = Object.entries(config.social)
       </div>
     </section>
 
-    {principles.length > 0 && (
-      <section class="about-section" aria-labelledby="about-principles">
-        <p class="section-label">Principles</p>
-        <ol id="about-principles" class="principles-list">
-          {principles.map((principle) => (
-            <li>
-              <div>
-                <strong>{principle.title}</strong>
-                <span>{principle.body}</span>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
-    )}
+    {
+      principles.length > 0 && (
+        <section class="about-section" aria-labelledby="about-principles">
+          <p class="section-label">Principles</p>
+          <ol id="about-principles" class="principles-list">
+            {principles.map((principle) => (
+              <li>
+                <div>
+                  <strong>{principle.title}</strong>
+                  <span>{principle.body}</span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
   </main>
 </BaseLayout>
 
@@ -157,56 +159,69 @@ const profileLinks = Object.entries(config.social)
     if (!(image instanceof HTMLImageElement) || !(canvas instanceof HTMLCanvasElement)) return;
 
     const paint = () => {
-      const rect = figure.getBoundingClientRect();
-      const size = Math.max(1, Math.round(Math.min(rect.width, rect.height)));
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const step = Number(figure.getAttribute('data-dither-grid-size')) || 1;
-      const threshold = Number(figure.getAttribute('data-dither-threshold')) || 0.45;
-      const width = Math.round(size * dpr);
-      const height = Math.round(size * dpr);
+      figure.removeAttribute('data-dither-failed');
 
-      canvas.width = width;
-      canvas.height = height;
+      try {
+        const rect = figure.getBoundingClientRect();
+        const size = Math.max(1, Math.round(Math.min(rect.width, rect.height)));
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const step = Number(figure.getAttribute('data-dither-grid-size')) || 1;
+        const threshold = Number(figure.getAttribute('data-dither-threshold')) || 0.45;
+        const width = Math.round(size * dpr);
+        const height = Math.round(size * dpr);
 
-      const scratch = document.createElement('canvas');
-      scratch.width = Math.ceil(width / step);
-      scratch.height = Math.ceil(height / step);
+        canvas.width = width;
+        canvas.height = height;
 
-      const source = scratch.getContext('2d', { willReadFrequently: true });
-      const target = canvas.getContext('2d');
-      if (!source || !target) return;
+        const scratch = document.createElement('canvas');
+        scratch.width = Math.ceil(width / step);
+        scratch.height = Math.ceil(height / step);
 
-      const cropSize = Math.min(image.naturalWidth, image.naturalHeight);
-      const sx = (image.naturalWidth - cropSize) / 2;
-      const sy = (image.naturalHeight - cropSize) / 2;
+        const source = scratch.getContext('2d', { willReadFrequently: true });
+        const target = canvas.getContext('2d');
+        if (!source || !target) throw new Error('Could not create portrait canvas context.');
 
-      source.drawImage(image, sx, sy, cropSize, cropSize, 0, 0, scratch.width, scratch.height);
+        const cropSize = Math.min(image.naturalWidth, image.naturalHeight);
+        const sx = (image.naturalWidth - cropSize) / 2;
+        const sy = (image.naturalHeight - cropSize) / 2;
 
-      const pixels = source.getImageData(0, 0, scratch.width, scratch.height).data;
-      const primary = parseColor(figure.getAttribute('data-dither-primary') || 'var(--bg-primary)');
-      const secondary = parseColor(figure.getAttribute('data-dither-secondary') || 'var(--label-primary)');
-      const output = target.createImageData(width, height);
+        source.drawImage(image, sx, sy, cropSize, cropSize, 0, 0, scratch.width, scratch.height);
 
-      for (let y = 0; y < height; y += 1) {
-        for (let x = 0; x < width; x += 1) {
-          const sampleX = Math.floor(x / step);
-          const sampleY = Math.floor(y / step);
-          const sample = (sampleY * scratch.width + sampleX) * 4;
-          const luma = (pixels[sample] * 0.299 + pixels[sample + 1] * 0.587 + pixels[sample + 2] * 0.114) / 255;
-          const bayer = (matrix[sampleY % 4][sampleX % 4] + 0.5) / 16;
-          const dithered = luma + (bayer - 0.5) * 0.32;
-          const color = dithered < threshold ? primary : secondary;
-          const index = (y * width + x) * 4;
+        const pixels = source.getImageData(0, 0, scratch.width, scratch.height).data;
+        const primary = parseColor(
+          figure.getAttribute('data-dither-primary') || 'var(--bg-primary)'
+        );
+        const secondary = parseColor(
+          figure.getAttribute('data-dither-secondary') || 'var(--label-primary)'
+        );
+        const output = target.createImageData(width, height);
 
-          output.data[index] = color[0];
-          output.data[index + 1] = color[1];
-          output.data[index + 2] = color[2];
-          output.data[index + 3] = 255;
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            const sampleX = Math.floor(x / step);
+            const sampleY = Math.floor(y / step);
+            const sample = (sampleY * scratch.width + sampleX) * 4;
+            const luma =
+              (pixels[sample] * 0.299 + pixels[sample + 1] * 0.587 + pixels[sample + 2] * 0.114) /
+              255;
+            const bayer = (matrix[sampleY % 4][sampleX % 4] + 0.5) / 16;
+            const dithered = luma + (bayer - 0.5) * 0.32;
+            const color = dithered < threshold ? primary : secondary;
+            const index = (y * width + x) * 4;
+
+            output.data[index] = color[0];
+            output.data[index + 1] = color[1];
+            output.data[index + 2] = color[2];
+            output.data[index + 3] = 255;
+          }
         }
-      }
 
-      target.putImageData(output, 0, 0);
-      figure.setAttribute('data-dither-ready', 'true');
+        target.putImageData(output, 0, 0);
+        figure.setAttribute('data-dither-ready', 'true');
+      } catch {
+        figure.removeAttribute('data-dither-ready');
+        figure.setAttribute('data-dither-failed', 'true');
+      }
     };
 
     if (image.complete) {

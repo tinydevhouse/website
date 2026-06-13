@@ -61,6 +61,10 @@ html[data-smooth-scroll='true'] {
   scroll-behavior: smooth;
 }
 
+html.fonts-loading body {
+  opacity: 0;
+}
+
 body {
   font-family: var(--font-sans);
   font-size: var(--text-body);
@@ -159,9 +163,9 @@ small {
    ------------------------------------------------------------ */
 main {
   width: 100%;
-  max-width: var(--max-width-content);
+  max-width: var(--site-shell-width);
   margin: 0 auto;
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-8) var(--site-shell-padding-mobile);
 }
 
 /* ------------------------------------------------------------

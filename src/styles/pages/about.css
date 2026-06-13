@@ -1,12 +1,7 @@
 .about-main {
-  max-width: var(--max-width-wide);
+  max-width: var(--site-shell-width);
   margin: 0 auto;
-  padding: var(--space-20) var(--space-6) var(--space-24);
-}
-
-.about-hero,
-.about-section {
-  max-width: var(--max-width-content);
+  padding: var(--space-20) var(--site-shell-padding) var(--space-24);
 }
 
 .about-hero {
@@ -33,6 +28,7 @@
 }
 
 .about-title {
+  font-family: var(--font-display);
   max-width: 10.5ch;
   margin: var(--space-2) 0 0;
   color: var(--label-primary);
@@ -97,6 +93,10 @@
   object-fit: cover;
 }
 
+.profile-media[data-dither-portrait] img {
+  opacity: 0;
+}
+
 .profile-media canvas {
   position: absolute;
   inset: 0;
@@ -113,7 +113,12 @@
   opacity: 0;
 }
 
+.profile-media[data-dither-failed='true'] img {
+  opacity: 1;
+}
+
 .profile-name {
+  font-family: var(--font-title);
   margin: 0;
   color: var(--label-primary);
   font-size: var(--text-title-3);
@@ -190,6 +195,7 @@
 }
 
 .section-heading {
+  font-family: var(--font-title);
   max-width: 20ch;
   margin: 0;
   color: var(--label-primary);
@@ -275,7 +281,7 @@
 
 @media (max-width: 48rem) {
   .about-main {
-    padding: var(--space-12) var(--space-6) var(--space-16);
+    padding: var(--space-12) var(--site-shell-padding-mobile) var(--space-16);
   }
 
   .about-hero {

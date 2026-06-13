@@ -39,9 +39,9 @@ const footerLinks = config.footerNav.filter((item) => item.href !== '/');
 }
 
 .footer-inner {
-  max-width: var(--max-width-content);
+  max-width: var(--site-shell-width);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 var(--site-shell-padding);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -89,7 +89,7 @@ const footerLinks = config.footerNav.filter((item) => item.href !== '/');
   }
 
   .footer-inner {
-    padding: 0 var(--space-4);
+    padding: 0 var(--site-shell-padding-mobile);
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

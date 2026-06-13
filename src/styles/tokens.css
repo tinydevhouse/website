@@ -11,6 +11,8 @@
   /* Font Families */
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, monospace;
+  --font-display: var(--font-mono);
+  --font-title: var(--font-mono);
 
   /* Type Scale */
   --text-large-title: 2.125rem;
@@ -86,6 +88,9 @@
      ------------------------------------------------------------ */
   --max-width-content: 784px;
   --max-width-wide: 880px;
+  --site-shell-width: var(--max-width-content);
+  --site-shell-padding: var(--space-6);
+  --site-shell-padding-mobile: var(--space-4);
   --nav-height: 52px;
 }
 

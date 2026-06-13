@@ -1,7 +1,7 @@
 .search-main {
-  max-width: var(--max-width-content);
+  max-width: var(--site-shell-width);
   margin: 0 auto;
-  padding: var(--space-10) var(--space-6) var(--space-16);
+  padding: var(--space-10) var(--site-shell-padding) var(--space-16);
 }
 
 .search-header {
@@ -9,6 +9,7 @@
 }
 
 .search-title {
+  font-family: var(--font-display);
   font-size: var(--text-title-1);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-tight);

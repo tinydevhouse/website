@@ -67,6 +67,8 @@ const rssHref = new URL(withBase('/rss.xml'), Astro.site).toString();
 const sitemapHref = new URL(withBase('/sitemap-index.xml'), Astro.site).toString();
 const pageHref = pageUrl ? new URL(pageUrl, Astro.site).toString() : Astro.url.toString();
 const ogImageHref = ogImage?.toString();
+const fontStylesheetHref =
+  'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap';
 
 // WebSite JSON-LD for website pages only.
 const websiteJsonLd =
@@ -99,7 +101,9 @@ const websiteJsonLd =
   (function () {
     let d;
     try {
-      d = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'mocha' : 'latte');
+      d =
+        localStorage.getItem('theme') ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'mocha' : 'latte');
     } catch {
       d = matchMedia('(prefers-color-scheme: dark)').matches ? 'mocha' : 'latte';
     }
@@ -107,15 +111,50 @@ const websiteJsonLd =
     const el = document.documentElement;
     el.setAttribute('data-theme', d);
     el.classList.add('no-transitions');
+    try {
+      if (sessionStorage.getItem('tdh-fonts-ready') !== 'true') {
+        el.classList.add('fonts-loading');
+      }
+    } catch {
+      el.classList.add('fonts-loading');
+    }
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () { el.classList.remove('no-transitions'); });
+      requestAnimationFrame(function () {
+        el.classList.remove('no-transitions');
+      });
     });
   })();
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link rel="preload" href={fontStylesheetHref} as="style" />
+<link href={fontStylesheetHref} rel="stylesheet" />
+<script is:inline>
+  (function () {
+    const el = document.documentElement;
+    const reveal = function () {
+      el.classList.remove('fonts-loading');
+      try {
+        sessionStorage.setItem('tdh-fonts-ready', 'true');
+      } catch {}
+    };
+
+    if (!el.classList.contains('fonts-loading')) return;
+
+    if (document.fonts && document.fonts.ready) {
+      Promise.race([
+        document.fonts.ready,
+        new Promise(function (resolve) {
+          setTimeout(resolve, 900);
+        }),
+      ]).then(reveal, reveal);
+    } else {
+      window.addEventListener('load', reveal, { once: true });
+      setTimeout(reveal, 900);
+    }
+  })();
+</script>
 <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} sizes="any" />
 <link rel="icon" type="image/png" href={withBase('/favicon-32x32.png')} sizes="32x32" />
 <link rel="icon" type="image/png" href={withBase('/favicon-16x16.png')} sizes="16x16" />

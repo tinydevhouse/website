@@ -1,5 +1,5 @@
 .projects-main {
-  max-width: var(--max-width-content);
+  max-width: var(--site-shell-width);
 }
 
 .projects-list {
@@ -22,7 +22,7 @@
 
 .projects-link {
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr) 1.25rem;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
   gap: var(--space-4);
   align-items: baseline;
   padding: var(--space-6) 0;
@@ -54,6 +54,7 @@
 }
 
 .projects-title {
+  font-family: var(--font-title);
   margin: 0;
   font-size: var(--text-title-3);
   font-weight: var(--weight-semibold);
@@ -64,7 +65,7 @@
 .projects-status {
   font-family: var(--font-mono);
   font-size: var(--text-caption-1);
-  color: var(--ctp-green);
+  color: var(--ctp-mauve);
   font-weight: var(--weight-medium);
   text-transform: capitalize;
   white-space: nowrap;
@@ -112,7 +113,7 @@
 
 @media (max-width: 600px) {
   .projects-link {
-    grid-template-columns: 2rem minmax(0, 1fr) 1rem;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
     gap: var(--space-3);
   }
 
