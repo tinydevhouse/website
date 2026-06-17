@@ -6,6 +6,7 @@ category: 'Build Notes'
 heroImage: '../../assets/tone-sample-blue-architecture.jpg'
 # focusEffect: 'scroll-dark'
 homeOrder: 1
+status: 'Published' 
 ---
 
 Why does it have to be so goddamn hard to move a photo library?
