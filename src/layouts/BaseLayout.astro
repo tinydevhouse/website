@@ -65,8 +65,10 @@ const htmlLang = lang ?? config.site.lang;
     <Footer />
     <script>
       import { onReady } from '../scripts/mount';
+      import { mountBetaSignup } from '../scripts/beta-signup';
       import { mountSkipLinkFocus } from '../scripts/skip-link';
 
+      onReady(mountBetaSignup);
       onReady(mountSkipLinkFocus);
     </script>
   </body>

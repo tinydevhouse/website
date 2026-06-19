@@ -14,6 +14,63 @@ This started because [I just wanted my photos to be files](/blog/photo-gallery/)
 
 It's a local-first desktop app for managing a personal photo and video library. You point it at a local or mounted folder and the app indexes everything in place. Browse your timeline, search for photos in natural language, see your photos on a map, clear out duplicates, and keep a journal of the days behind the photos.
 
+<section class="beta-signup" aria-labelledby="photo-gallery-beta-title">
+  <div class="beta-signup-copy">
+    <p class="beta-signup-kicker">Private Beta</p>
+    <h2 id="photo-gallery-beta-title">Want early access?</h2>
+    <!-- <p>The app is currently in private beta. Sign up to be notified when more invites become available.</p> -->
+  </div>
+  <button class="beta-signup-trigger" type="button" data-beta-signup-open>Join the waitlist</button>
+</section>
+
+<dialog class="beta-signup-modal" aria-labelledby="photo-gallery-beta-modal-title" data-beta-signup-modal>
+  <form class="beta-signup-dialog" method="dialog">
+    <button class="beta-signup-close" type="button" aria-label="Close beta signup" data-beta-signup-close>×</button>
+    <div class="beta-signup-dialog-copy">
+      <p class="beta-signup-kicker">Photo Gallery Private Beta</p>
+      <h2 id="photo-gallery-beta-modal-title">Join the waitlist</h2>
+      <p>The app is currently in private beta. Sign up to be notified when more invites become available.</p>
+    </div>
+  </form>
+  <form
+    class="beta-signup-form"
+    method="POST"
+    action="https://app.loops.so/api/newsletter-form/cmqld6gzr02hh0jydd2ewj0xk"
+    data-bwignore="true"
+    data-beta-signup-form
+  >
+    <input type="hidden" name="mailingLists" value="cmqlf1zzt2bct0jxq6kz5b4nr" />
+    <input type="hidden" name="source" value="Photo Gallery website" />
+    <label>
+      <span>Email*</span>
+      <input type="email" name="email" autocomplete="email" data-bwignore="true" required />
+    </label>
+    <div class="beta-signup-row">
+      <label>
+        <span>Name</span>
+        <input type="text" name="firstName" autocomplete="given-name" data-bwignore="true" />
+      </label>
+      <fieldset data-beta-os-group>
+        <legend>OS*</legend>
+        <label>
+          <input type="checkbox" value="windows" />
+          <span>Windows</span>
+        </label>
+        <label>
+          <input type="checkbox" value="linux" />
+          <span>Linux</span>
+        </label>
+      </fieldset>
+    </div>
+    <label class="beta-signup-consent">
+      <input type="checkbox" required />
+      <span>I agree to receive private beta updates by email. Unsubscribe at any time.</span>
+    </label>
+    <button type="submit">Join</button>
+  </form>
+  <p class="beta-signup-success" role="status" tabindex="-1" hidden data-beta-signup-success>You’re on the list. I’ll let you know when invites open</p>
+  <p class="beta-signup-error" role="alert" hidden data-beta-signup-error></p>
+</dialog>
 
 ## Features
 
