@@ -38,20 +38,50 @@ export function mountBetaSignup(root: ParentNode = document) {
         '[data-beta-os-group] input[type="checkbox"]'
       ),
     ];
+    const osGroup = signupForm.querySelector<HTMLElement>('[data-beta-os-group]');
+    const emailInput = signupForm.querySelector<HTMLInputElement>('input[type="email"]');
     const successMessage = signupForm.parentElement?.querySelector<HTMLElement>(
       '[data-beta-signup-success]'
     );
     const errorMessage = signupForm.parentElement?.querySelector<HTMLElement>(
       '[data-beta-signup-error]'
     );
+    const consentCheckbox = signupForm.querySelector<HTMLInputElement>(
+      '[data-beta-signup-consent]'
+    );
     const submitButton = signupForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    const updateSubmitButton = () => {
+      if (submitButton) submitButton.disabled = !consentCheckbox?.checked;
+    };
+
+    const setInvalid = (element: HTMLElement | null, invalid: boolean) => {
+      if (!element) return;
+      element.toggleAttribute('aria-invalid', invalid);
+    };
+
+    updateSubmitButton();
 
     signupForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      if (!osCheckboxes.some((checkbox) => checkbox.checked)) {
-        osCheckboxes[0]?.setCustomValidity('Choose at least one OS.');
-        osCheckboxes[0]?.reportValidity();
+      const hasValidEmail = Boolean(emailInput?.value.trim() && emailInput.validity.valid);
+      const hasOperatingSystem = osCheckboxes.some((checkbox) => checkbox.checked);
+      const hasConsent = consentCheckbox?.checked === true;
+
+      setInvalid(emailInput, !hasValidEmail);
+      setInvalid(osGroup, !hasOperatingSystem);
+      setInvalid(consentCheckbox, !hasConsent);
+
+      if (!hasValidEmail || !hasOperatingSystem || !hasConsent) {
+        if (errorMessage) {
+          errorMessage.textContent = !hasValidEmail
+            ? 'Enter a valid email address.'
+            : !hasOperatingSystem
+              ? 'Choose at least one operating system.'
+              : 'You need to agree before joining the waitlist.';
+          errorMessage.hidden = false;
+        }
         return;
       }
 
@@ -86,7 +116,6 @@ export function mountBetaSignup(root: ParentNode = document) {
           throw new Error(result.message || 'Something went wrong. Please try again.');
         }
 
-        signupForm.hidden = true;
         if (successMessage) {
           successMessage.hidden = false;
           successMessage.focus();
@@ -104,8 +133,14 @@ export function mountBetaSignup(root: ParentNode = document) {
 
     osCheckboxes.forEach((checkbox) => {
       checkbox.addEventListener('change', () => {
-        osCheckboxes.forEach((item) => item.setCustomValidity(''));
+        setInvalid(osGroup, false);
       });
+    });
+
+    emailInput?.addEventListener('input', () => setInvalid(emailInput, false));
+    consentCheckbox?.addEventListener('change', () => {
+      setInvalid(consentCheckbox, false);
+      updateSubmitButton();
     });
   });
 }

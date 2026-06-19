@@ -313,8 +313,7 @@
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
+    color var(--duration-fast) var(--ease-out);
 }
 
 .prose .beta-signup-trigger {
@@ -325,11 +324,24 @@
   justify-self: start;
 }
 
+.prose .beta-signup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
 .prose .beta-signup-trigger:hover,
 .prose .beta-signup-form button:hover {
   background: var(--color-blue);
   color: var(--bg-primary);
-  transform: translateY(-1px);
+}
+
+.prose .beta-signup-form button:disabled {
+  border-color: var(--separator);
+  background: var(--bg-secondary);
+  color: var(--label-tertiary);
+  cursor: not-allowed;
 }
 
 .prose .beta-signup-modal {
@@ -368,17 +380,14 @@
   position: absolute;
   top: var(--space-4);
   right: var(--space-4);
-  display: grid;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   padding: 0;
-  place-items: center;
-  border: 1px solid var(--separator);
-  border-radius: var(--radius-sm);
-  background: var(--bg-secondary);
+  border: 0;
+  background: transparent;
   color: var(--label-primary);
   font: inherit;
-  font-size: var(--text-title-3);
+  font-size: var(--text-title-2);
   line-height: 1;
   cursor: pointer;
 }
@@ -454,16 +463,15 @@
 }
 
 .prose .beta-signup-success {
-  padding: 0 var(--space-6) var(--space-6);
-  color: var(--label-secondary);
+  margin: 0;
+  color: var(--color-green);
   font-size: var(--text-footnote);
   line-height: var(--leading-normal);
 }
 
 .prose .beta-signup-error {
   margin: 0;
-  padding: 0 var(--space-6) var(--space-6);
-  color: var(--ctp-red);
+  color: var(--color-orange);
   font-size: var(--text-footnote);
   line-height: var(--leading-normal);
 }
@@ -522,6 +530,16 @@
 
 .prose .beta-signup-form input[type='checkbox']:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--color-blue) 28%, transparent);
+  outline-offset: 2px;
+}
+
+.prose .beta-signup-form input[aria-invalid='true'],
+.prose .beta-signup-form fieldset[aria-invalid='true'] input[type='checkbox'] {
+  border-color: var(--color-orange);
+}
+
+.prose .beta-signup-form input[aria-invalid='true'] {
+  outline: 2px solid color-mix(in srgb, var(--color-orange) 24%, transparent);
   outline-offset: 2px;
 }
 

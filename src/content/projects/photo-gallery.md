@@ -25,8 +25,8 @@ It's a local-first desktop app for managing a personal photo and video library. 
 
 <dialog class="beta-signup-modal" aria-labelledby="photo-gallery-beta-modal-title" data-beta-signup-modal>
   <form class="beta-signup-dialog" method="dialog">
-    <button class="beta-signup-close" type="button" aria-label="Close beta signup" data-beta-signup-close>×</button>
-    <div class="beta-signup-dialog-copy">
+    <button class="beta-signup-close" type="submit" aria-label="Close beta signup" data-beta-signup-close>×</button>
+    <div class="beta-signup-dialog-copy" data-beta-signup-dialog-copy>
       <p class="beta-signup-kicker">Photo Gallery Private Beta</p>
       <h2 id="photo-gallery-beta-modal-title">Join the waitlist</h2>
       <p>The app is currently in private beta. Sign up to be notified when more invites become available.</p>
@@ -36,6 +36,7 @@ It's a local-first desktop app for managing a personal photo and video library. 
     class="beta-signup-form"
     method="POST"
     action="https://app.loops.so/api/newsletter-form/cmqld6gzr02hh0jydd2ewj0xk"
+    novalidate
     data-bwignore="true"
     data-beta-signup-form
   >
@@ -63,13 +64,15 @@ It's a local-first desktop app for managing a personal photo and video library. 
       </fieldset>
     </div>
     <label class="beta-signup-consent">
-      <input type="checkbox" required />
+      <input type="checkbox" required data-beta-signup-consent />
       <span>I agree to receive private beta updates by email. Unsubscribe at any time.</span>
     </label>
-    <button type="submit">Join</button>
+    <div class="beta-signup-actions">
+      <button type="submit" disabled>Join</button>
+      <p class="beta-signup-success" role="status" tabindex="-1" hidden data-beta-signup-success>You’re on the list 🎉</p>
+      <p class="beta-signup-error" role="alert" hidden data-beta-signup-error></p>
+    </div>
   </form>
-  <p class="beta-signup-success" role="status" tabindex="-1" hidden data-beta-signup-success>You’re on the list. I’ll let you know when invites open</p>
-  <p class="beta-signup-error" role="alert" hidden data-beta-signup-error></p>
 </dialog>
 
 ## Features
