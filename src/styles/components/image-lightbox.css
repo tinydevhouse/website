@@ -4,7 +4,7 @@
   border: none;
   max-width: min(92vw, 1200px);
   max-height: 94dvh;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-xs);
   overflow: visible;
 }
 
@@ -39,16 +39,16 @@
 
 .lightbox-close {
   position: absolute;
-  top: -22px;
-  right: -22px;
-  width: 44px;
-  height: 44px;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 1.65rem;
+  height: 1.65rem;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--bg-primary) 16%, transparent);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid color-mix(in srgb, var(--label-primary) 24%, transparent);
-  color: var(--label-primary);
+  background: color-mix(in srgb, var(--bg-primary) 92%, transparent);
+  backdrop-filter: blur(0.35rem);
+  -webkit-backdrop-filter: blur(0.35rem);
+  border: 1px solid var(--separator);
+  color: var(--label-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,14 +58,20 @@
 }
 
 .lightbox-close:hover {
-  background: color-mix(in srgb, var(--bg-primary) 28%, transparent);
+  color: var(--color-blue);
+}
+
+.lightbox-close svg {
+  display: block;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .lightbox-img {
   display: block;
   max-width: min(90vw, 1160px);
   max-height: 86dvh;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xs);
   object-fit: contain;
   border: none !important;
 }
@@ -78,7 +84,7 @@
   max-width: 60ch;
 }
 
-/* Prose images that open the lightbox. */
-.prose img.is-zoomable {
+/* Content images that open the lightbox. */
+main img.is-zoomable {
   cursor: zoom-in;
 }

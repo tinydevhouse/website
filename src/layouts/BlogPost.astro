@@ -4,7 +4,6 @@ import type { CollectionEntry } from 'astro:content';
 import Comments from '../components/Comments.astro';
 import FeaturedPostGrid from '../components/FeaturedPostGrid.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import ImageLightbox from '../components/ImageLightbox.astro';
 import ScrollFocus from '../components/ScrollFocus.astro';
 import WaffleSwitch from '../components/WaffleSwitch.astro';
 
@@ -156,7 +155,6 @@ const jsonLd = serializeScriptJson({
     </article>
     <Comments />
   </main>
-  <ImageLightbox />
 
   <script>
     import { mountReadingRailLoader } from '../scripts/reading-rail-loader';

@@ -38,7 +38,7 @@ export function mountImageLightbox() {
     closeBtn.focus({ preventScroll: true });
   };
 
-  document.querySelectorAll<HTMLImageElement>('.prose img').forEach((img) => {
+  document.querySelectorAll<HTMLImageElement>('main img').forEach((img) => {
     if (img.closest('a') || img.dataset.lightboxBound === 'true') return;
     img.dataset.lightboxBound = 'true';
     img.classList.add('is-zoomable');
@@ -48,7 +48,11 @@ export function mountImageLightbox() {
     img.setAttribute('aria-label', `${img.alt || 'Image'} preview`);
 
     const open = () => {
-      const src = img.getAttribute('data-src') ?? img.currentSrc ?? img.src;
+      const src =
+        img.getAttribute('data-lightbox-src') ??
+        img.getAttribute('data-src') ??
+        img.src ??
+        img.currentSrc;
       const caption =
         img.nextElementSibling?.tagName === 'EM'
           ? ((img.nextElementSibling as HTMLElement).textContent ?? '')

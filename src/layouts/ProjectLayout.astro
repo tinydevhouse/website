@@ -2,7 +2,6 @@
 import '../styles/layouts/blog-post.css';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
-import ImageLightbox from '../components/ImageLightbox.astro';
 import BaseLayout from './BaseLayout.astro';
 import { withBase } from '../utils/paths';
 import { serializeScriptJson } from '../utils/serialize-script-json';
@@ -136,7 +135,6 @@ const jsonLd = serializeScriptJson({
       }
     </article>
   </main>
-  <ImageLightbox />
 </BaseLayout>
 
 <style>
