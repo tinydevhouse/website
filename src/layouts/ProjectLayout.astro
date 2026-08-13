@@ -62,7 +62,6 @@ const jsonLd = serializeScriptJson({
         <div class="post-accent"></div>
         <div class="post-meta">
           <FormattedDate class="meta-date" date={pubDate} />
-          <span class="dot">·</span>
           <span class="project-status">{statusLabel}</span>
           {
             updatedDate && (
@@ -135,10 +134,27 @@ const jsonLd = serializeScriptJson({
       }
     </article>
   </main>
+
+  <script>
+    import { mountReadingRailLoader } from '../scripts/reading-rail-loader';
+
+    mountReadingRailLoader();
+  </script>
 </BaseLayout>
 
 <style>
   .project-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--ctp-mauve) 38%, transparent);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--ctp-mauve) 9%, transparent);
+    color: var(--ctp-mauve);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption-1);
+    font-weight: var(--weight-medium);
+    line-height: 1;
     text-transform: capitalize;
   }
 

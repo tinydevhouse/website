@@ -3,7 +3,7 @@ title: 'Photo Gallery'
 description: "A local-first desktop photo library with on-device AI search, GPS maps, duplicate cleanup, and a markdown journal."
 pubDate: 2026-06-02
 stack: ["Rust", "Tauri", "React", "Local-first", "AI"]
-status: 'in-progress'
+status: 'beta'
 featured: true
 projectOrder: 1
 heroImage: '../../assets/photo-gallery/photo-gallery-hero.jpg'

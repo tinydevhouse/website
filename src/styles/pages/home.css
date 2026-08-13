@@ -121,11 +121,19 @@
 }
 
 .home-project-status {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-mono);
   font-size: var(--text-caption-1);
   color: var(--ctp-mauve);
   font-weight: 500;
+  line-height: 1;
   white-space: nowrap;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--ctp-mauve) 38%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--ctp-mauve) 9%, transparent);
+  text-transform: capitalize;
 }
 
 .home-project-desc {
