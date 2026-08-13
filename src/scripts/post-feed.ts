@@ -17,6 +17,72 @@ function initPostFeeds(root: ParentNode = document) {
     const more = feed.querySelector<HTMLButtonElement>('[data-feed-more]');
     const empty = feed.querySelector<HTMLElement>('[data-feed-empty]');
     const sentinel = feed.querySelector<HTMLElement>('[data-feed-sentinel]');
+    feed.querySelectorAll<HTMLElement>('.feed-item--micro').forEach((item) => {
+      const content = item.querySelector<HTMLElement>('[data-micro-content]');
+      const imageParagraphs = [...(content?.children ?? [])].filter((child) => {
+        if (!(child instanceof HTMLParagraphElement)) return false;
+        const images = child.querySelectorAll('img');
+        return images.length > 0 && (child.textContent ?? '').trim() === '';
+      });
+      if (imageParagraphs.length === 0) return;
+
+      const carousel = item.querySelector<HTMLElement>('[data-micro-carousel]');
+      if (!carousel) return;
+      const track = carousel.querySelector<HTMLElement>('[data-micro-carousel-track]');
+      imageParagraphs.forEach((paragraph) => {
+        paragraph.querySelectorAll('img').forEach((img) => {
+          const slide = document.createElement('figure');
+          slide.className = 'micro-media-slide';
+          slide.dataset.microCarouselSlide = '';
+          slide.append(img);
+          track?.append(slide);
+        });
+        paragraph.remove();
+      });
+      carousel.hidden = false;
+    });
+
+    feed.querySelectorAll<HTMLElement>('[data-micro-carousel]').forEach((carousel) => {
+      const track = carousel.querySelector<HTMLElement>('[data-micro-carousel-track]');
+      const slides = [...carousel.querySelectorAll<HTMLElement>('[data-micro-carousel-slide]')];
+      const controls = carousel.querySelector<HTMLElement>('.micro-media-controls');
+      if (controls) controls.hidden = slides.length <= 1;
+      const current = carousel.querySelector<HTMLElement>('[data-micro-carousel-current]');
+      const count = current?.parentElement;
+      if (count) count.lastChild!.textContent = ` / ${slides.length}`;
+      const activeIndex = () => {
+        if (!track || slides.length === 0) return 0;
+        return slides.reduce((nearest, slide, index) =>
+          Math.abs(slide.offsetLeft - track.scrollLeft) <
+          Math.abs(slides[nearest].offsetLeft - track.scrollLeft) ? index : nearest, 0);
+      };
+      const goTo = (nextIndex: number) => {
+        const index = (nextIndex + slides.length) % slides.length;
+        track?.scrollTo({ left: slides[index]?.offsetLeft ?? 0, behavior: 'smooth' });
+      };
+      carousel.querySelector('[data-micro-carousel-prev]')?.addEventListener('click', () => {
+        goTo(activeIndex() - 1);
+      });
+      carousel.querySelector('[data-micro-carousel-next]')?.addEventListener('click', () => {
+        goTo(activeIndex() + 1);
+      });
+      track?.addEventListener('scroll', () => {
+        if (current) current.textContent = String(activeIndex() + 1);
+      }, { passive: true });
+    });
+
+    feed.querySelectorAll<HTMLElement>('[data-micro-copy]').forEach((copy) => {
+      const content = copy.querySelector<HTMLElement>('[data-micro-content]');
+      const button = copy.querySelector<HTMLButtonElement>('[data-micro-expand]');
+      if (!content || !button) return;
+      button.hidden = content.scrollHeight <= content.clientHeight + 2;
+      button.addEventListener('click', () => {
+        const expanded = copy.classList.toggle('is-expanded');
+        button.textContent = expanded ? 'Show less' : 'Show more';
+        button.setAttribute('aria-expanded', String(expanded));
+        button.hidden = false;
+      });
+    });
     let active = 'all';
     let visible = useMore ? pageSize : Number.POSITIVE_INFINITY;
 

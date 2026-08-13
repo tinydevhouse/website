@@ -1,14 +1,64 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import config from '../../astro-theme-config';
 import { getUiText } from '../ui';
 import { withBase } from '../utils/paths';
 import FormattedDate from './FormattedDate.astro';
 
 type BlogPost = CollectionEntry<'blog'>;
+type MicroEntry = CollectionEntry<'micros'>;
+
+export type BlogFeedItem = {
+  type: 'blog';
+  id: string;
+  date: Date;
+  title: string;
+  description?: string;
+  category?: string;
+  tags?: string[];
+  entry: BlogPost;
+};
+
+type RenderedContent = Awaited<ReturnType<typeof render>>;
+
+const validateMicroBody = (micro: MicroEntry) => {
+  const body = (micro.body ?? '').trim();
+  const unsupportedMarkdown = /^(?:#{1,6}\s|[-*+]\s|\d+\.\s|>\s|```|~~~|\|)/m;
+  const paragraphs = body
+    .split(/\r?\n\s*\r?\n/)
+    .map((paragraph) => paragraph.replace(/!\[[^\]]*\]\([^)]*\)/g, '').trim())
+    .filter(Boolean);
+  const visibleText = body
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[*_`~]/g, '');
+
+  if (unsupportedMarkdown.test(body)) {
+    throw new Error(
+      `Micro "${micro.id}" may only use paragraphs, links, images, bold, and italics.`
+    );
+  }
+  if (paragraphs.length > 2 || visibleText.length > 560) {
+    throw new Error(`Micro "${micro.id}" must be at most two paragraphs and 560 characters.`);
+  }
+};
+
+export type MicroFeedItem = {
+  type: 'micro';
+  id: string;
+  date: Date;
+  category?: string;
+  tags?: string[];
+  entry: MicroEntry;
+  Content: RenderedContent['Content'];
+};
+
+export type FeedItem = BlogFeedItem | MicroFeedItem;
 
 type Props = {
-  posts: BlogPost[];
+  posts?: BlogPost[];
+  items?: FeedItem[];
   basePath?: string;
   headingLevel?: 'h2' | 'h3';
   showFilters?: boolean;
@@ -17,7 +67,8 @@ type Props = {
 };
 
 const {
-  posts,
+  posts: passedPosts,
+  items: passedItems,
   basePath = '/blog',
   headingLevel = 'h2',
   showFilters = true,
@@ -25,9 +76,66 @@ const {
   initialVisible = 8,
 } = Astro.props;
 
+let items: FeedItem[] = [];
+
+if (passedItems) {
+  items = passedItems;
+} else if (passedPosts) {
+  items = passedPosts.map((post) => ({
+    type: 'blog',
+    id: post.id,
+    date: post.data.pubDate,
+    title: post.data.title,
+    description: post.data.description,
+    category: post.data.category,
+    tags: post.data.tags ?? [],
+    entry: post,
+  }));
+} else {
+  const [blogEntries, microEntries] = await Promise.all([
+    getCollection('blog'),
+    getCollection('micros'),
+  ]);
+
+  const activeBlog: BlogFeedItem[] = blogEntries
+    .filter((p) => !p.data.draft)
+    .map((post) => ({
+      type: 'blog',
+      id: post.id,
+      date: post.data.pubDate,
+      title: post.data.title,
+      description: post.data.description,
+      category: post.data.category,
+      tags: post.data.tags ?? [],
+      entry: post,
+    }));
+
+  const activeMicros: MicroFeedItem[] = await Promise.all(
+    microEntries.map(async (micro) => {
+      validateMicroBody(micro);
+      const { Content } = await render(micro);
+      return {
+        type: 'micro',
+        id: micro.id,
+        date: micro.data.date,
+        category: micro.data.category,
+        tags: micro.data.tags ?? [],
+        entry: micro,
+        Content,
+      };
+    })
+  );
+
+  items = [...activeBlog, ...activeMicros].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+}
+
 const labels = getUiText().postFeed;
 
 const postSlug = (id: string) => id;
+const getReadingMinutes = (post: BlogPost) => {
+  const wordCount = (post.body ?? '').trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(wordCount / 265));
+};
 const categoryOrder = config.content.categoryOrder;
 const sortByCategoryOrder = (a: string, b: string) => {
   const aIndex = categoryOrder.indexOf(a);
@@ -40,18 +148,25 @@ const sortByCategoryOrder = (a: string, b: string) => {
   }
   return a.localeCompare(b);
 };
+
+const getItemCategory = (item: FeedItem) => {
+  if (item.type === 'micro') return 'Micros';
+  return 'Articles';
+};
+
 const categories = [
   ...new Set(
-    posts
-      .map((post) => post.data.category)
-      .filter((category): category is string => Boolean(category))
+    items
+      .map((item) => getItemCategory(item))
   ),
 ].sort(sortByCategoryOrder);
+
 const filters = categories.map((category) => ({
   key: `category:${category}`,
   label: category,
-  count: posts.filter((post) => post.data.category === category).length,
+  count: items.filter((item) => getItemCategory(item) === category).length,
 }));
+
 const Heading = headingLevel;
 ---
 
@@ -116,7 +231,7 @@ const Heading = headingLevel;
                 aria-pressed="true"
               >
                 <span>{labels.all}</span>
-                <span class="feed-filter-count">{posts.length}</span>
+                <span class="feed-filter-count">{items.length}</span>
               </button>
               {filters.map((filter) => (
                 <button
@@ -148,41 +263,134 @@ const Heading = headingLevel;
 
   <ol class="feed-list index-list">
     {
-      posts.map((post, index) => (
-        <li
-          class="feed-item"
-          data-feed-item
-          data-category={post.data.category ?? ''}
-          data-search={`${post.data.title} ${post.data.description} ${post.data.category ?? ''}`.toLocaleLowerCase()}
-          data-index={index}
-        >
-          <a href={withBase(`${basePath}/${postSlug(post.id)}/`)} class="feed-link index-link">
-            <span class="feed-num index-num" aria-hidden="true">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-            <div class="feed-body">
-              <Heading class="feed-title">{post.data.title}</Heading>
-              {post.data.description && <p class="feed-desc">{post.data.description}</p>}
-              {post.data.category && (
-                <div class="feed-meta">
-                  <span class="feed-category">{post.data.category}</span>
+      items.map((item, index) => {
+        const itemCategory = getItemCategory(item);
+        const itemSearch =
+          item.type === 'blog'
+            ? `${item.title} ${item.description ?? ''} ${item.category ?? ''} ${(item.tags ?? []).join(' ')}`.toLocaleLowerCase()
+            : `${item.entry.body ?? ''} ${item.category ?? ''} ${(item.tags ?? []).join(' ')} micros log`.toLocaleLowerCase();
+
+        if (item.type === 'blog') {
+          return (
+            <li
+              class="feed-item feed-item--blog"
+              data-feed-item
+              data-category={itemCategory}
+              data-search={itemSearch}
+              data-index={index}
+            >
+              <a href={withBase(`${basePath}/${postSlug(item.id)}/`)} class="feed-link index-link">
+                <span class="feed-num index-num" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <div class="feed-body">
+                  <Heading class="feed-title">{item.title}</Heading>
+                  {item.description && <p class="feed-desc">{item.description}</p>}
                 </div>
-              )}
-            </div>
-            <FormattedDate class="feed-date index-date" date={post.data.pubDate} />
-            <span class="feed-arrow index-arrow" aria-hidden="true">
-              ↗
-            </span>
-            <span class="sr-only">{labels.read}</span>
-          </a>
-        </li>
-      ))
+                <FormattedDate class="feed-date index-date" date={item.date} />
+                <div class="feed-meta">
+                  <span class="feed-category">Article</span>
+                  {item.category && <span class="feed-subcategory">{item.category}</span>}
+                  {item.tags && item.tags.length > 0 && (
+                    <div class="micro-tags" aria-label="Tags">
+                      {item.tags.map((tag) => <span class="micro-tag">#{tag}</span>)}
+                    </div>
+                  )}
+                  <span class="feed-read">{getReadingMinutes(item.entry)} min read ↗</span>
+                </div>
+                <span class="sr-only">{labels.read}</span>
+              </a>
+            </li>
+          );
+        }
+
+        const MicroContent = item.Content;
+
+        return (
+          <li
+            class="feed-item feed-item--micro"
+            data-feed-item
+            data-category={itemCategory}
+            data-search={itemSearch}
+            data-index={index}
+          >
+            <article class="micro-card">
+              <span class="feed-num index-num" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <FormattedDate class="micro-date index-date" date={item.date} />
+              <div class="micro-body">
+              <div class="micro-copy" data-micro-copy>
+                <div class="micro-content prose" data-micro-content>
+                  <MicroContent />
+                </div>
+                <button type="button" class="micro-expand" data-micro-expand aria-expanded="false">
+                  Show more
+                </button>
+                <div class="micro-media" data-micro-carousel hidden={item.entry.data.media.length === 0}>
+                  <div class="micro-media-track" data-micro-carousel-track>
+                    {item.entry.data.media.map((media, mediaIndex) => (
+                      <figure class="micro-media-slide" data-micro-carousel-slide>
+                        {media.type === 'image' ? (
+                          <Image
+                            src={media.src}
+                            alt={media.alt}
+                            data-lightbox-src={media.src.src}
+                            widths={[320, 480, 640]}
+                            sizes="(max-width: 42.5rem) 72vw, 14rem"
+                            loading={index === 0 && mediaIndex === 0 ? 'eager' : 'lazy'}
+                          />
+                        ) : (
+                          <video
+                            src={withBase(media.src)}
+                            poster={media.poster?.src}
+                            controls
+                            playsinline
+                            preload="metadata"
+                            aria-label={media.title ?? 'Micro log video'}
+                          />
+                        )}
+                        {media.type === 'image' && media.caption && (
+                          <figcaption>{media.caption}</figcaption>
+                        )}
+                      </figure>
+                    ))}
+                  </div>
+                  <div class="micro-media-controls" hidden={item.entry.data.media.length <= 1}>
+                    <button type="button" data-micro-carousel-prev aria-label="Previous media">
+                      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12.5 4.5-5 5.5 5 5.5" /></svg>
+                    </button>
+                    <span class="micro-media-count" aria-live="polite">
+                      <span data-micro-carousel-current>1</span> / {item.entry.data.media.length}
+                    </span>
+                    <button type="button" data-micro-carousel-next aria-label="Next media">
+                      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4.5 5 5.5-5 5.5" /></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="micro-footer">
+                  <span class="feed-category">Micro</span>
+                  {item.category && <span class="feed-subcategory">{item.category}</span>}
+                  {item.tags && item.tags.length > 0 && (
+                    <div class="micro-tags" aria-label="Tags">
+                      {item.tags.map((tag) => (
+                        <span class="micro-tag">#{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              </div>
+            </article>
+          </li>
+        );
+      })
     }
   </ol>
 
   <p class="feed-empty" data-feed-empty hidden>{labels.empty}</p>
   {
-    showMore && posts.length > initialVisible && (
+    showMore && items.length > initialVisible && (
       <>
         <button type="button" class="feed-more" data-feed-more>
           {labels.more}
@@ -201,472 +409,736 @@ const Heading = headingLevel;
 </script>
 
 <style>
-.post-feed {
-  --feed-control-height: 2rem;
-  --feed-more-height: 2.5rem;
-  --feed-hover-shift: 0.125rem;
+  .post-feed {
+    --feed-control-height: 2rem;
+    --feed-more-height: 2.5rem;
+    --feed-hover-shift: 0.125rem;
 
-  display: grid;
-  gap: var(--space-6);
-}
-
-.feed-controls {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-5);
-  align-items: end;
-  border-bottom: 1px solid var(--separator);
-}
-
-.feed-filter-rail {
-  grid-column: 1;
-  grid-row: 1;
-  position: relative;
-  width: min(100%, 38rem);
-  min-width: 0;
-}
-
-.feed-filters {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: var(--space-5);
-  align-items: flex-start;
-  min-width: 0;
-  padding-right: var(--space-8);
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  scroll-padding-inline: var(--space-1) var(--space-8);
-  scrollbar-width: none;
-  user-select: none;
-  mask-image: linear-gradient(90deg, #000 calc(100% - 1.75rem), transparent);
-}
-
-.feed-filters.is-dragging {
-  cursor: grabbing;
-}
-
-.feed-filters::-webkit-scrollbar {
-  display: none;
-}
-
-.feed-filter {
-  font-family: var(--font-sans);
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  height: var(--feed-control-height);
-  flex: 0 0 auto;
-  border: 0;
-  border-radius: 0;
-  padding: 0 0 var(--space-3);
-  background: transparent;
-  color: var(--label-tertiary);
-  font-size: var(--text-footnote);
-  font-weight: var(--weight-semibold);
-  cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.feed-filter::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 2px;
-  border-radius: var(--radius-full);
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--duration-normal) var(--ease-out);
-}
-
-.feed-filter:hover,
-.feed-filter.is-active {
-  color: var(--label-primary);
-}
-
-.feed-filter.is-active::after {
-  transform: scaleX(1);
-}
-
-.feed-filter-count {
-  color: var(--label-tertiary);
-  font-size: var(--text-caption-2);
-  font-variant-numeric: tabular-nums;
-}
-
-.feed-filter-scroll {
-  display: none;
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  bottom: var(--space-3);
-  place-items: center;
-  width: 1.875rem;
-  border: 0;
-  padding: 0;
-  background: color-mix(in srgb, var(--bg-primary) 86%, transparent);
-  color: var(--label-secondary);
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
-}
-
-.feed-filter-scroll:hover {
-  color: var(--label-primary);
-}
-
-.feed-filter-scroll:disabled {
-  cursor: default;
-  opacity: 0 !important;
-  pointer-events: none;
-}
-
-.feed-filter-scroll svg {
-  display: block;
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.feed-filter-scroll-prev {
-  left: 0;
-}
-
-.feed-filter-scroll-next {
-  right: 0;
-}
-
-.feed-filter-rail.has-filter-overflow:not(.is-at-start) .feed-filters {
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 1.75rem,
-    #000 calc(100% - 1.75rem),
-    transparent
-  );
-}
-
-.feed-filter-rail.has-filter-overflow.is-at-end .feed-filters {
-  mask-image: linear-gradient(90deg, transparent, #000 1.75rem);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .feed-filter-scroll {
     display: grid;
+    gap: var(--space-6);
   }
 
-  .feed-filters {
-    cursor: grab;
-  }
-
-  .feed-filter-rail:hover .feed-filter-scroll:not(:disabled),
-  .feed-filter-rail:focus-within .feed-filter-scroll:not(:disabled) {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-.feed-search {
-  --feed-search-mark-height: 1.25rem;
-  --feed-search-inline-padding: 0.65rem;
-
-  grid-column: 2;
-  grid-row: 1;
-  position: relative;
-  display: grid;
-  align-items: center;
-  justify-self: end;
-  box-sizing: border-box;
-  width: 3rem;
-  height: calc(var(--feed-control-height) + var(--space-3));
-  min-width: 0;
-  padding-left: var(--feed-search-inline-padding);
-  padding-right: var(--feed-search-inline-padding);
-  color: var(--label-tertiary);
-  font-size: var(--text-footnote);
-  font-family: var(--font-mono);
-  overflow: hidden;
-  transition:
-    width 180ms var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
-}
-
-.feed-search::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  width: 1px;
-  height: var(--feed-search-mark-height);
-  border-radius: var(--radius-full);
-  background: var(--separator);
-  pointer-events: none;
-  transform: translateY(-50%) scaleY(0);
-  transform-origin: center;
-  transition: transform var(--duration-fast) var(--ease-out);
-}
-
-.feed-search:focus-within {
-  width: min(13rem, 34vw);
-  color: var(--label-primary);
-}
-
-.feed-search.has-query {
-  width: min(13rem, 34vw);
-}
-
-.feed-search:focus-within::after,
-.feed-search.has-query::after {
-  transform: translateY(-50%) scaleY(1);
-}
-
-.feed-search-icon {
-  position: absolute;
-  top: 50%;
-  left: calc(100% - var(--feed-search-inline-padding) - 1em);
-  display: inline-grid;
-  place-items: center;
-  width: 1em;
-  height: 1em;
-  color: currentColor;
-  font-size: inherit;
-  line-height: 1;
-  transform: translateY(-50%);
-  transition: left 180ms var(--ease-out);
-}
-
-.feed-search:focus-within .feed-search-icon,
-.feed-search.has-query .feed-search-icon {
-  left: var(--feed-search-inline-padding);
-}
-
-.feed-search-icon svg {
-  display: block;
-  width: 1em;
-  height: 1em;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.875;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.feed-search-input {
-  width: 100%;
-  min-width: 0;
-  height: var(--feed-control-height);
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--label-primary);
-  font: inherit;
-  font-size: inherit;
-  font-weight: var(--weight-semibold);
-  outline: none;
-  padding: 0 0 0 calc(1em + var(--space-2));
-  opacity: 1;
-  transition: opacity 70ms var(--ease-out) 120ms;
-}
-
-.feed-search:not(:focus-within, .has-query) .feed-search-input {
-  opacity: 0;
-  pointer-events: none;
-  transition-duration: 50ms;
-  transition-delay: 0ms;
-}
-
-.feed-search-input::placeholder {
-  color: transparent;
-}
-
-.feed-search-input::-webkit-search-cancel-button {
-  width: 0.8rem;
-  height: 0.8rem;
-  margin-left: var(--space-2);
-  background: var(--label-primary);
-  cursor: pointer;
-  opacity: 0.72;
-  -webkit-appearance: none;
-  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.22 3.28 8 7.06l3.78-3.78.94.94L8.94 8l3.78 3.78-.94.94L8 8.94l-3.78 3.78-.94-.94L7.06 8 3.28 4.22l.94-.94Z'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-}
-
-.feed-item {
-  border-bottom: 1px solid var(--separator);
-}
-
-.feed-item[hidden] {
-  display: none;
-}
-
-.feed-link {
-  grid-template-columns: 2.5rem minmax(0, 1fr) max-content auto;
-  align-items: baseline;
-  padding: var(--space-5) 0;
-}
-
-.feed-num {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.feed-link :global(.feed-date) {
-  grid-column: 3;
-  grid-row: 1;
-}
-
-.feed-body {
-  grid-column: 2;
-  grid-row: 1;
-  min-width: 0;
-}
-
-.feed-title {
-  font-family: var(--font-title);
-  margin: 0;
-  color: var(--label-primary);
-  font-size: var(--text-title-3);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-snug);
-  letter-spacing: 0;
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.feed-link:hover .feed-title {
-  color: var(--color-blue);
-}
-
-.feed-desc {
-  max-width: 62ch;
-  margin: var(--space-2) 0 0;
-  color: var(--label-secondary);
-  font-size: var(--text-callout);
-  line-height: var(--leading-normal);
-}
-
-.feed-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
-}
-
-.feed-category {
-  color: var(--color-blue);
-  font-size: var(--text-caption-2);
-  font-weight: var(--weight-semibold);
-  font-family: var(--font-sans);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.feed-arrow {
-  grid-column: 4;
-  grid-row: 1;
-  font-size: var(--text-callout);
-}
-
-.feed-link:hover .feed-arrow {
-  color: var(--color-blue);
-  transform: translate(var(--feed-hover-shift), calc(var(--feed-hover-shift) * -1));
-}
-
-.feed-more {
-  justify-self: center;
-  height: var(--feed-more-height);
-  padding: 0 var(--space-5);
-  border: 1px solid color-mix(in srgb, var(--label-primary) 12%, transparent);
-  border-radius: var(--radius-sm);
-  background: var(--bg-tertiary);
-  color: var(--label-secondary);
-  font: inherit;
-  font-size: var(--text-footnote);
-  font-weight: var(--weight-semibold);
-  font-family: var(--font-mono);
-  cursor: pointer;
-}
-
-.feed-more:hover {
-  color: var(--color-blue);
-  border-color: color-mix(in srgb, var(--color-blue) 32%, transparent);
-}
-
-.feed-more[hidden],
-.feed-empty[hidden] {
-  display: none;
-}
-
-.feed-empty {
-  margin: 0;
-  color: var(--label-tertiary);
-  font-size: var(--text-callout);
-}
-
-.feed-sentinel {
-  height: 1px;
-}
-
-@media (max-width: 42.5rem) {
   .feed-controls {
+    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--space-3);
-  }
-
-  .feed-search {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
-  }
-
-  .feed-search:focus-within,
-  .feed-search.has-query {
-    width: min(10.5rem, 42vw);
+    gap: var(--space-5);
+    align-items: end;
+    border-bottom: 1px solid var(--separator);
   }
 
   .feed-filter-rail {
     grid-column: 1;
     grid-row: 1;
-    width: 100%;
+    position: relative;
+    width: min(100%, 38rem);
+    min-width: 0;
+  }
+
+  .feed-filters {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--space-5);
+    align-items: flex-start;
+    min-width: 0;
+    padding-right: var(--space-8);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: var(--space-1) var(--space-8);
+    scrollbar-width: none;
+    user-select: none;
+    mask-image: linear-gradient(90deg, #000 calc(100% - 1.75rem), transparent);
+  }
+
+  .feed-filters.is-dragging {
+    cursor: grabbing;
+  }
+
+  .feed-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .feed-filter {
+    font-family: var(--font-sans);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: var(--feed-control-height);
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: 0;
+    padding: 0 0 var(--space-3);
+    background: transparent;
+    color: var(--label-tertiary);
+    font-size: var(--text-footnote);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .feed-filter::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    border-radius: var(--radius-full);
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  .feed-filter:hover,
+  .feed-filter.is-active {
+    color: var(--label-primary);
+  }
+
+  .feed-filter.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .feed-filter-count {
+    color: var(--label-tertiary);
+    font-size: var(--text-caption-2);
+    font-variant-numeric: tabular-nums;
   }
 
   .feed-filter-scroll {
     display: none;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    bottom: var(--space-3);
+    place-items: center;
+    width: 1.875rem;
+    border: 0;
+    padding: 0;
+    background: color-mix(in srgb, var(--bg-primary) 86%, transparent);
+    color: var(--label-secondary);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .feed-filter-scroll:hover {
+    color: var(--label-primary);
+  }
+
+  .feed-filter-scroll:disabled {
+    cursor: default;
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+
+  .feed-filter-scroll svg {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feed-filter-scroll-prev {
+    left: 0;
+  }
+
+  .feed-filter-scroll-next {
+    right: 0;
+  }
+
+  .feed-filter-rail.has-filter-overflow:not(.is-at-start) .feed-filters {
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 1.75rem,
+      #000 calc(100% - 1.75rem),
+      transparent
+    );
+  }
+
+  .feed-filter-rail.has-filter-overflow.is-at-end .feed-filters {
+    mask-image: linear-gradient(90deg, transparent, #000 1.75rem);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .feed-filter-scroll {
+      display: grid;
+    }
+
+    .feed-filters {
+      cursor: grab;
+    }
+
+    .feed-filter-rail:hover .feed-filter-scroll:not(:disabled),
+    .feed-filter-rail:focus-within .feed-filter-scroll:not(:disabled) {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  .feed-search {
+    --feed-search-mark-height: 1.25rem;
+    --feed-search-inline-padding: 0.65rem;
+
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+    display: grid;
+    align-items: center;
+    justify-self: end;
+    box-sizing: border-box;
+    width: 3rem;
+    height: calc(var(--feed-control-height) + var(--space-3));
+    min-width: 0;
+    padding-left: var(--feed-search-inline-padding);
+    padding-right: var(--feed-search-inline-padding);
+    color: var(--label-tertiary);
+    font-size: var(--text-footnote);
+    font-family: var(--font-mono);
+    overflow: hidden;
+    transition:
+      width 180ms var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .feed-search::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 1px;
+    height: var(--feed-search-mark-height);
+    border-radius: var(--radius-full);
+    background: var(--separator);
+    pointer-events: none;
+    transform: translateY(-50%) scaleY(0);
+    transform-origin: center;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .feed-search:focus-within {
+    width: min(13rem, 34vw);
+    color: var(--label-primary);
+  }
+
+  .feed-search.has-query {
+    width: min(13rem, 34vw);
+  }
+
+  .feed-search:focus-within::after,
+  .feed-search.has-query::after {
+    transform: translateY(-50%) scaleY(1);
+  }
+
+  .feed-search-icon {
+    position: absolute;
+    top: 50%;
+    left: calc(100% - var(--feed-search-inline-padding) - 1em);
+    display: inline-grid;
+    place-items: center;
+    width: 1em;
+    height: 1em;
+    color: currentColor;
+    font-size: inherit;
+    line-height: 1;
+    transform: translateY(-50%);
+    transition: left 180ms var(--ease-out);
+  }
+
+  .feed-search:focus-within .feed-search-icon,
+  .feed-search.has-query .feed-search-icon {
+    left: var(--feed-search-inline-padding);
+  }
+
+  .feed-search-icon svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.875;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feed-search-input {
+    width: 100%;
+    min-width: 0;
+    height: var(--feed-control-height);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--label-primary);
+    font: inherit;
+    font-size: inherit;
+    font-weight: var(--weight-semibold);
+    outline: none;
+    padding: 0 0 0 calc(1em + var(--space-2));
+    opacity: 1;
+    transition: opacity 70ms var(--ease-out) 120ms;
+  }
+
+  .feed-search:not(:focus-within, .has-query) .feed-search-input {
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: 50ms;
+    transition-delay: 0ms;
+  }
+
+  .feed-search-input::placeholder {
+    color: transparent;
+  }
+
+  .feed-search-input::-webkit-search-cancel-button {
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-left: var(--space-2);
+    background: var(--label-primary);
+    cursor: pointer;
+    opacity: 0.72;
+    -webkit-appearance: none;
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.22 3.28 8 7.06l3.78-3.78.94.94L8.94 8l3.78 3.78-.94.94L8 8.94l-3.78 3.78-.94-.94L7.06 8 3.28 4.22l.94-.94Z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
+
+  .feed-item {
+    border-bottom: 1px solid var(--separator);
+  }
+
+  .feed-item[hidden] {
+    display: none;
   }
 
   .feed-link {
-    grid-template-columns: 2rem minmax(0, 1fr) auto;
-    gap: var(--space-3);
+    grid-template-columns: 2.5rem minmax(0, 1fr) max-content;
+    align-items: baseline;
     padding: var(--space-5) 0;
   }
 
-  .feed-body,
-  .feed-arrow,
   .feed-num {
-    grid-column: auto;
-    grid-row: auto;
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .feed-link :global(.feed-date) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .feed-body {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
+    min-width: 0;
   }
 
   .feed-title {
-    font-size: var(--text-headline);
+    font-family: var(--font-title);
+    margin: 0;
+    color: var(--label-primary);
+    font-size: var(--text-title-3);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    letter-spacing: 0;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .feed-link:hover .feed-title {
+    color: var(--color-blue);
   }
 
   .feed-desc {
-    font-size: var(--text-footnote);
+    max-width: 62ch;
+    margin: var(--space-2) 0 0;
+    color: var(--label-secondary);
+    font-size: var(--text-callout);
+    line-height: var(--leading-normal);
   }
-}
+
+  .feed-meta {
+    grid-column: 2 / 4;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .feed-read {
+    margin-left: auto;
+    color: var(--label-tertiary);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption-2);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .feed-link:hover .feed-read {
+    color: var(--color-blue);
+  }
+
+  .feed-category {
+    color: var(--color-blue);
+    font-size: var(--text-caption-2);
+    font-weight: var(--weight-semibold);
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .feed-subcategory {
+    color: var(--label-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--text-caption-2);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Micro Card Styles */
+  .feed-item--micro {
+    padding: var(--space-5) 0;
+  }
+
+  .micro-card {
+    --micro-date-column: 7rem;
+
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) var(--micro-date-column);
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+
+  .micro-card > .feed-num {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .micro-card > :global(.micro-date) {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .micro-body {
+    grid-column: 2 / 4;
+    grid-row: 1;
+    display: grid;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  .micro-date {
+    color: var(--label-tertiary);
+    font-size: var(--text-caption-1);
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono);
+  }
+
+  .micro-media {
+    position: relative;
+    min-width: 0;
+    margin-top: var(--space-4);
+  }
+
+  .micro-media[hidden],
+  .micro-media-controls[hidden] {
+    display: none;
+  }
+
+  .micro-media-track {
+    display: flex;
+    gap: var(--space-3);
+    padding: 0 var(--space-1) var(--space-1);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: var(--space-1);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .micro-media-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  :global(.micro-media-slide) {
+    position: relative;
+    flex: 0 0 clamp(10rem, 38%, 14rem);
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    scroll-snap-align: start;
+    overflow: hidden;
+    border-radius: var(--radius-xs);
+    background: var(--bg-tertiary);
+  }
+
+  :global(.micro-media-slide img),
+  :global(.micro-media-slide video) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 0 !important;
+    object-fit: cover;
+  }
+
+  :global(.micro-media-slide figcaption) {
+    position: absolute;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    left: var(--space-3);
+    width: fit-content;
+    max-width: calc(100% - var(--space-6));
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--bg-primary) 84%, transparent);
+    color: var(--label-secondary);
+    font-size: var(--text-caption-2);
+  }
+
+  .micro-media-controls {
+    position: absolute;
+    inset: 0 calc(var(--space-2) * -1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .micro-media-controls button {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--separator);
+    border-radius: 50%;
+    padding: 0;
+    background: color-mix(in srgb, var(--bg-primary) 92%, transparent);
+    color: var(--label-secondary);
+    cursor: pointer;
+    pointer-events: auto;
+    backdrop-filter: blur(0.35rem);
+  }
+
+  .micro-media-controls button:hover {
+    color: var(--color-blue);
+  }
+
+  .micro-media-controls svg {
+    display: block;
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .micro-media-count {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .micro-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .micro-tag {
+    color: var(--label-tertiary);
+    font-size: var(--text-caption-2);
+    font-family: var(--font-mono);
+    font-weight: var(--weight-medium);
+  }
+
+  .micro-content {
+    position: relative;
+    max-width: min(62ch, calc(100% - var(--micro-date-column) - var(--space-4)));
+    max-height: 7.5rem;
+    overflow: hidden;
+    font-size: var(--text-callout);
+    line-height: var(--leading-normal);
+    color: var(--label-secondary);
+  }
+
+  .micro-copy:not(.is-expanded) .micro-content::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 3.5rem;
+    background: linear-gradient(transparent, var(--bg-primary));
+    pointer-events: none;
+  }
+
+  .micro-copy.is-expanded .micro-content {
+    max-height: none;
+  }
+
+  .micro-expand {
+    width: fit-content;
+    margin-top: var(--space-2);
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--label-tertiary);
+    font: var(--weight-medium) var(--text-footnote) var(--font-sans);
+    cursor: pointer;
+  }
+
+  .micro-footer {
+    max-width: calc(100% - var(--micro-date-column) - var(--space-4));
+  }
+
+  .micro-expand:hover {
+    color: var(--color-blue);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .micro-expand[hidden] {
+    display: none;
+  }
+
+  .micro-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  .micro-content :global(p) {
+    margin-block: var(--space-2);
+  }
+
+  .feed-more {
+    justify-self: center;
+    height: var(--feed-more-height);
+    padding: 0 var(--space-5);
+    border: 1px solid color-mix(in srgb, var(--label-primary) 12%, transparent);
+    border-radius: var(--radius-sm);
+    background: var(--bg-tertiary);
+    color: var(--label-secondary);
+    font: inherit;
+    font-size: var(--text-footnote);
+    font-weight: var(--weight-semibold);
+    font-family: var(--font-mono);
+    cursor: pointer;
+  }
+
+  .feed-more:hover {
+    color: var(--color-blue);
+    border-color: color-mix(in srgb, var(--color-blue) 32%, transparent);
+  }
+
+  .feed-more[hidden],
+  .feed-empty[hidden] {
+    display: none;
+  }
+
+  .feed-empty {
+    margin: 0;
+    color: var(--label-tertiary);
+    font-size: var(--text-callout);
+  }
+
+  .feed-sentinel {
+    height: 1px;
+  }
+
+  @media (max-width: 42.5rem) {
+    .feed-controls {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-3);
+    }
+
+    .feed-search {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: end;
+    }
+
+    .feed-search:focus-within,
+    .feed-search.has-query {
+      width: min(10.5rem, 42vw);
+    }
+
+    .feed-filter-rail {
+      grid-column: 1;
+      grid-row: 1;
+      width: 100%;
+    }
+
+    .feed-filter-scroll {
+      display: none;
+    }
+
+    .feed-link {
+      grid-template-columns: 2rem minmax(0, 1fr) max-content;
+      gap: var(--space-3);
+      padding: var(--space-5) 0;
+    }
+
+    .feed-body,
+    .feed-num {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .feed-link :global(.feed-date) {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .feed-title {
+      font-size: var(--text-headline);
+    }
+
+    .feed-desc {
+      font-size: var(--text-footnote);
+    }
+
+    .micro-card {
+      --micro-date-column: auto;
+      grid-template-columns: 2rem minmax(0, 1fr) max-content;
+      gap: var(--space-3);
+    }
+
+    .micro-body {
+      grid-column: 2 / -1;
+      grid-row: 2;
+    }
+
+    .micro-content,
+    .micro-footer {
+      max-width: none;
+    }
+
+    .micro-card > :global(.micro-date) {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
 </style>
