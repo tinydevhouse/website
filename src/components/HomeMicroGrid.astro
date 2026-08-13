@@ -90,7 +90,7 @@ const entries = await Promise.all(
 
 <style>
   .home-micro-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
-  .home-micro-card { min-width: 0; padding: var(--space-3); overflow: hidden; border: 1px solid var(--separator); border-radius: 2px; }
+  .home-micro-card { min-width: 0; padding: var(--space-3); overflow: hidden; border: 1px solid var(--separator); border-radius: var(--radius-sm); }
   .home-micro-media { position: relative; margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-3); overflow: hidden; border-radius: 0; }
   .home-micro-media[hidden], .home-micro-controls[hidden] { display: none; }
   .home-micro-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
@@ -106,10 +106,10 @@ const entries = await Promise.all(
   .home-micro-card.is-expanded .home-micro-copy { display: block; overflow: visible; -webkit-line-clamp: unset; }
   .home-micro-copy :global(p) { margin: 0; }
   .home-micro-copy :global(p + p) { margin-top: var(--space-2); }
-  .home-micro-footer { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); color: var(--label-tertiary); font-family: var(--font-mono); font-size: var(--text-caption-2); }
+  .home-micro-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); width: 100%; margin-top: var(--space-3); color: var(--label-tertiary); font-family: var(--font-mono); font-size: var(--text-caption-2); }
   .home-micro-kind { color: var(--label-secondary); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
-  .home-micro-date { margin-left: auto; white-space: nowrap; }
-  .home-micro-read { display: inline-block; margin-top: var(--space-2); border: 0; padding: 0; background: transparent; color: var(--label-tertiary); font-family: var(--font-sans); font-size: var(--text-caption-1); font-weight: var(--weight-medium); cursor: pointer; }
+  .home-micro-date { white-space: nowrap; text-align: right; }
+  .home-micro-read { display: block; margin: var(--space-2) 0 0 auto; border: 0; padding: 0; background: transparent; color: var(--label-tertiary); font-family: var(--font-sans); font-size: var(--text-caption-1); font-weight: var(--weight-regular); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 55%, transparent); text-underline-offset: 0.2em; cursor: pointer; }
   .home-micro-read:hover { color: var(--color-blue); }
   .home-micro-read[hidden] { display: none; }
   @media (max-width: 52rem) { .home-micro-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

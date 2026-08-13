@@ -997,13 +997,17 @@ const Heading = headingLevel;
   }
 
   .micro-expand {
+    display: block;
     width: fit-content;
-    margin-top: var(--space-2);
+    margin: var(--space-2) calc(var(--micro-date-column) + var(--space-4)) 0 auto;
     border: 0;
     padding: 0;
     background: transparent;
     color: var(--label-tertiary);
-    font: var(--weight-medium) var(--text-footnote) var(--font-sans);
+    font: var(--weight-regular) var(--text-caption-1) var(--font-sans);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+    text-underline-offset: 0.2em;
     cursor: pointer;
   }
 
@@ -1013,8 +1017,6 @@ const Heading = headingLevel;
 
   .micro-expand:hover {
     color: var(--color-blue);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
   }
 
   .micro-expand[hidden] {
@@ -1134,6 +1136,10 @@ const Heading = headingLevel;
     .micro-content,
     .micro-footer {
       max-width: none;
+    }
+
+    .micro-expand {
+      margin-right: 0;
     }
 
     .micro-card > :global(.micro-date) {
