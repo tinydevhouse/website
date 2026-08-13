@@ -2,7 +2,8 @@
 title: 'I just want my photos to be files'
 description: 'After a decade of fighting iCloud, Google Photos, and Proton to get my photos out as plain files, I gave up and started building my own photo app.'
 pubDate: '2026-06-05'
-category: 'Build Notes'
+category: 'Behind the Build'
+tags: ['photo-management', 'local-first']
 heroImage: '../../assets/tone-sample-blue-architecture.jpg'
 # focusEffect: 'scroll-dark'
 homeOrder: 1
