@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets';
+import { render, type CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+import { withBase } from '../utils/paths';
+
+type Props = { micros: CollectionEntry<'micros'>[] };
+const { micros } = Astro.props;
+const entries = await Promise.all(
+  micros.map(async (entry) => ({ entry, Content: (await render(entry)).Content }))
+);
+---
+
+<div class="home-micro-grid" data-home-micro-grid>
+  {entries.map(({ entry, Content }) => (
+    <article class="home-micro-card" data-home-micro-card>
+      <div class="home-micro-media" data-home-micro-carousel hidden={entry.data.media.length === 0}>
+        <div class="home-micro-track" data-home-micro-track>
+          {entry.data.media.map((media) => (
+            <figure class="home-micro-slide" data-home-micro-slide>
+              {media.type === 'image' ? (
+                <Image src={media.src} alt={media.alt} data-lightbox-src={media.src.src} widths={[400, 640, 900]} sizes="(max-width: 42rem) 100vw, 25rem" />
+              ) : (
+                <video src={withBase(media.src)} poster={media.poster?.src} controls playsinline preload="metadata" aria-label={media.title ?? 'Micro video'} />
+              )}
+            </figure>
+          ))}
+        </div>
+        <div class="home-micro-controls" hidden={entry.data.media.length <= 1}>
+          <button type="button" data-home-micro-prev aria-label="Previous image"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12.5 4.5-5 5.5 5 5.5" /></svg></button>
+          <button type="button" data-home-micro-next aria-label="Next image"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4.5 5 5.5-5 5.5" /></svg></button>
+        </div>
+      </div>
+      <div class="home-micro-copy prose" data-home-micro-content><Content /></div>
+      <button type="button" class="home-micro-read" data-home-micro-expand aria-expanded="false">Read more</button>
+      <footer class="home-micro-footer">
+        <span class="home-micro-kind">{entry.data.category ?? 'Update'}</span>
+        <FormattedDate class="home-micro-date" date={entry.data.date} />
+      </footer>
+    </article>
+  ))}
+</div>
+
+<script>
+  import { onReady } from '../scripts/mount';
+
+  onReady(() => {
+    document.querySelectorAll<HTMLElement>('[data-home-micro-card]').forEach((card) => {
+      const content = card.querySelector<HTMLElement>('[data-home-micro-content]');
+      const expand = card.querySelector<HTMLButtonElement>('[data-home-micro-expand]');
+      const carousel = card.querySelector<HTMLElement>('[data-home-micro-carousel]');
+      const track = card.querySelector<HTMLElement>('[data-home-micro-track]');
+      if (!content || !expand || !carousel || !track) return;
+
+      [...content.children].forEach((child) => {
+        if (!(child instanceof HTMLParagraphElement)) return;
+        const images = [...child.querySelectorAll('img')];
+        if (images.length === 0 || (child.textContent ?? '').trim()) return;
+        images.forEach((img) => {
+          const slide = document.createElement('figure');
+          slide.className = 'home-micro-slide';
+          slide.dataset.homeMicroSlide = '';
+          slide.append(img);
+          track.append(slide);
+        });
+        child.remove();
+      });
+
+      const slides = [...track.querySelectorAll<HTMLElement>('[data-home-micro-slide]')];
+      carousel.hidden = slides.length === 0;
+      const controls = carousel.querySelector<HTMLElement>('.home-micro-controls');
+      if (controls) controls.hidden = slides.length <= 1;
+      let active = 0;
+      const move = (direction: number) => {
+        active = (active + direction + slides.length) % slides.length;
+        track.scrollTo({ left: slides[active]?.offsetLeft ?? 0, behavior: 'smooth' });
+      };
+      carousel.querySelector('[data-home-micro-prev]')?.addEventListener('click', () => move(-1));
+      carousel.querySelector('[data-home-micro-next]')?.addEventListener('click', () => move(1));
+
+      expand.hidden = content.scrollHeight <= content.clientHeight + 2;
+      expand.addEventListener('click', () => {
+        const expanded = card.classList.toggle('is-expanded');
+        expand.textContent = expanded ? 'Show less' : 'Read more';
+        expand.setAttribute('aria-expanded', String(expanded));
+      });
+    });
+  });
+</script>
+
+<style>
+  .home-micro-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+  .home-micro-card { min-width: 0; padding: var(--space-3); overflow: hidden; border: 1px solid var(--separator); border-radius: 2px; }
+  .home-micro-media { position: relative; margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-3); overflow: hidden; border-radius: 0; }
+  .home-micro-media[hidden], .home-micro-controls[hidden] { display: none; }
+  .home-micro-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .home-micro-track::-webkit-scrollbar { display: none; }
+  :global(.home-micro-slide) { flex: 0 0 100%; margin: 0; aspect-ratio: 3 / 2; scroll-snap-align: start; background: var(--bg-tertiary); }
+  :global(.home-micro-slide img), :global(.home-micro-slide video) { display: block; width: 100%; height: 100%; border-radius: 0 !important; object-fit: cover; }
+  .home-micro-controls { position: absolute; inset: 0 var(--space-2); display: flex; align-items: center; justify-content: space-between; opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) var(--ease-out); }
+  .home-micro-media:hover .home-micro-controls, .home-micro-media:focus-within .home-micro-controls { opacity: 1; }
+  .home-micro-controls button { display: grid; place-items: center; width: 1.65rem; height: 1.65rem; border: 1px solid var(--separator); border-radius: 50%; padding: 0; background: color-mix(in srgb, var(--bg-primary) 92%, transparent); color: var(--label-secondary); cursor: pointer; pointer-events: auto; backdrop-filter: blur(0.35rem); }
+  .home-micro-controls button:hover { color: var(--color-blue); }
+  .home-micro-controls svg { display: block; width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .home-micro-copy { display: -webkit-box; overflow: hidden; color: var(--label-secondary); font-size: var(--text-footnote); line-height: var(--leading-normal); -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+  .home-micro-card.is-expanded .home-micro-copy { display: block; overflow: visible; -webkit-line-clamp: unset; }
+  .home-micro-copy :global(p) { margin: 0; }
+  .home-micro-copy :global(p + p) { margin-top: var(--space-2); }
+  .home-micro-footer { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); color: var(--label-tertiary); font-family: var(--font-mono); font-size: var(--text-caption-2); }
+  .home-micro-kind { color: var(--label-secondary); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.04em; }
+  .home-micro-date { margin-left: auto; white-space: nowrap; }
+  .home-micro-read { display: inline-block; margin-top: var(--space-2); border: 0; padding: 0; background: transparent; color: var(--label-tertiary); font-family: var(--font-sans); font-size: var(--text-caption-1); font-weight: var(--weight-medium); cursor: pointer; }
+  .home-micro-read:hover { color: var(--color-blue); }
+  .home-micro-read[hidden] { display: none; }
+  @media (max-width: 52rem) { .home-micro-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 34rem) { .home-micro-grid { grid-template-columns: 1fr; } }
+  @media (hover: none) { .home-micro-controls { display: none; } }
+</style>

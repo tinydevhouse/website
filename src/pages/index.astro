@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import HomeMicroGrid from '../components/HomeMicroGrid.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getUiText } from '../ui';
@@ -15,6 +16,9 @@ const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const recentPosts = posts.slice(0, 5);
+const recentMicros = (await getCollection('micros'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 6);
 const sortProjects = (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) => {
   const orderA = a.data.projectOrder ?? Number.POSITIVE_INFINITY;
   const orderB = b.data.projectOrder ?? Number.POSITIVE_INFINITY;
@@ -113,7 +117,7 @@ const projects = (await getCollection('projects'))
           <div class="home-section-header">
             <h2 class="home-section-label">{tr.blogEyebrow}</h2>
             <a href={withBase('/blog')} class="home-view-all">
-              All posts ↗
+              All articles ↗
             </a>
           </div>
           <ol class="home-post-list index-list">
@@ -134,6 +138,18 @@ const projects = (await getCollection('projects'))
               </li>
             ))}
           </ol>
+        </section>
+      )
+    }
+
+    {
+      recentMicros.length > 0 && (
+        <section class="home-section">
+          <div class="home-section-header">
+            <h2 class="home-section-label">Little thoughts</h2>
+            <a href={withBase('/blog')} class="home-view-all">All micros ↗</a>
+          </div>
+          <HomeMicroGrid micros={recentMicros} />
         </section>
       )
     }
