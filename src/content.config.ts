@@ -16,6 +16,7 @@ const blog = defineCollection({
       heroImage: z.optional(image()),
       focusEffect: z.literal('scroll-dark').optional(),
       category: z.string().optional(),
+      tags: z.array(z.string()).default([]),
       homeFeatured: z.boolean().default(false),
       homeHeroOrder: z.number().int().positive().optional(),
       homeOrder: z.number().int().positive().optional(),
@@ -43,4 +44,33 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = { blog, projects };
+const micros = defineCollection({
+  loader: glob({ base: './src/content/micros', pattern: '**/*.{md,mdx}' }),
+  schema: ({ image }) =>
+    z.object({
+      date: z.coerce.date(),
+      category: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+      media: z
+        .array(
+          z.discriminatedUnion('type', [
+            z.object({
+              type: z.literal('image'),
+              src: image(),
+              alt: z.string(),
+              caption: z.string().optional(),
+            }),
+            z.object({
+              type: z.literal('video'),
+              src: z.string(),
+              poster: image().optional(),
+              title: z.string().optional(),
+            }),
+          ])
+        )
+        .max(4)
+        .default([]),
+    }),
+});
+
+export const collections = { blog, projects, micros };
