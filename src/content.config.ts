@@ -36,7 +36,7 @@ const projects = defineCollection({
       heroImage: z.optional(image()),
       stack: z.array(z.string()).default([]),
       status: z
-        .enum(['alpha', 'beta', 'in-progress', 'launched', 'live', 'archived'])
+        .enum(['alpha', 'beta', 'in-progress', 'on-hold', 'launched', 'live', 'archived'])
         .default('in-progress'),
       demoUrl: z.url().optional(),
       repoUrl: z.url().optional(),

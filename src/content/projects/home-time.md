@@ -3,7 +3,7 @@ title: 'Home Time'
 description: 'A cross-platform browser extension that overlays Hemnet listings with information on public transport access, commute times for your most important destinations and monthly costs difference.'
 pubDate: 2026-08-15
 stack: ['TypeScript', 'React', 'WXT', 'Browser extension']
-status: 'on hold'
+status: 'on-hold'
 featured: true
 projectOrder: 2
 # NEW SCREENSHOT: Replace this card/social-preview hero with the strongest new gallery overview shot.
