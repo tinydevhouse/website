@@ -80,10 +80,7 @@ It's a local-first desktop app for managing and curating a personal photo and vi
 
 The whole idea is that you own your data: not only the original files, but also the metadata you create while organising them. Your photos and videos stay as plain files in the folders you choose, and the journal is plain markdown you can open in any editor. The local index, albums, and embeddings live in SQLite, while your paths, EXIF metadata, favourites, albums, and library summary can be exported as human-readable JSON. The AI features run entirely on-device, so your photos are never uploaded for processing and there is no account or cloud backend to depend on.
 
-<!-- NEW SCREENSHOT: Hero — a polished full-window gallery view with the sidebar visible.
-Use a visually varied library, a populated timeline/grid, and no modal covering the interface.
-Replace photo-gallery-main.jpg, then uncomment the image below.
-![Photo Gallery — main library view](../../assets/photo-gallery/photo-gallery-main.jpg) -->
+![Gallery](../../assets/photo-gallery/photo-gallery-hero.jpg)
 
 ### Command palette & AI search
 

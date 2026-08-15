@@ -87,7 +87,7 @@
 }
 
 .home-project-link--media {
-  grid-template-columns: 2.5rem 10rem minmax(0, 1fr);
+  grid-template-columns: 2.5rem 14rem minmax(0, 1fr);
 }
 
 .home-project-content {
@@ -151,6 +151,7 @@
 
 .home-project-media {
   display: block;
+  align-self: start;
   overflow: hidden;
   border: 1px solid var(--separator);
   border-radius: var(--radius-xs);
@@ -181,8 +182,8 @@
 .home-project-img {
   display: block;
   width: 100%;
-  height: calc(100% - 0.75rem);
-  min-height: 0;
+  height: auto;
+  aspect-ratio: 16 / 9;
   border-radius: 0;
   object-fit: cover;
   transition: filter 180ms var(--ease-out);
@@ -252,11 +253,6 @@
   .home-project-top {
     grid-template-columns: 1fr auto;
     gap: var(--space-3);
-  }
-
-  .home-project-img {
-    aspect-ratio: 16 / 9;
-    height: auto;
   }
 
   .home-post-link {
