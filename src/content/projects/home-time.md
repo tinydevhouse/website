@@ -7,7 +7,7 @@ status: 'on-hold'
 featured: true
 projectOrder: 2
 # NEW SCREENSHOT: Replace this card/social-preview hero with the strongest new gallery overview shot.
-heroImage: '../../assets/home-time/home-time-hero.jpg'
+heroImage: '../../assets/home-time/home-time-hero.png'
 draft: false
 ---
 
