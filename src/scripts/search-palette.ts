@@ -126,6 +126,8 @@ export function mountSearchPalette(root: ParentNode = document) {
     if (dialog.open) dialog.close();
   };
 
+  dialog.querySelector('[data-search-palette-close]')?.addEventListener('click', () => close());
+
   document.addEventListener('keydown', (event) => {
     const target = event.target;
     const isEditable =

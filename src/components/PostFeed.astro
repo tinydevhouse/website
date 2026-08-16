@@ -157,12 +157,9 @@ const getItemCategory = (item: FeedItem) => {
   return 'Articles';
 };
 
-const categories = [
-  ...new Set(
-    items
-      .map((item) => getItemCategory(item))
-  ),
-].sort(sortByCategoryOrder);
+const categories = [...new Set(items.map((item) => getItemCategory(item)))].sort(
+  sortByCategoryOrder
+);
 
 const filters = categories.map((category) => ({
   key: `category:${category}`,
@@ -303,7 +300,9 @@ const Heading = headingLevel;
                   {item.category && <span class="feed-subcategory">{item.category}</span>}
                   {item.tags && item.tags.length > 0 && (
                     <div class="micro-tags" aria-label="Tags">
-                      {item.tags.map((tag) => <span class="micro-tag">#{tag}</span>)}
+                      {item.tags.map((tag) => (
+                        <span class="micro-tag">#{tag}</span>
+                      ))}
                     </div>
                   )}
                   <span class="feed-read">{getReadingMinutes(item.entry)} min read ↗</span>
@@ -330,66 +329,79 @@ const Heading = headingLevel;
               </span>
               <FormattedDate class="micro-date index-date" date={item.date} />
               <div class="micro-body">
-              <div class="micro-copy" data-micro-copy>
-                <div class="micro-content prose" data-micro-content>
-                  <MicroContent />
-                </div>
-                <button type="button" class="micro-expand" data-micro-expand aria-expanded="false">
-                  Show more
-                </button>
-                <div class="micro-media" data-micro-carousel hidden={item.entry.data.media.length === 0}>
-                  <div class="micro-media-track" data-micro-carousel-track>
-                    {item.entry.data.media.map((media, mediaIndex) => (
-                      <figure class="micro-media-slide" data-micro-carousel-slide>
-                        {media.type === 'image' ? (
-                          <Image
-                            src={media.src}
-                            alt={media.alt}
-                            data-lightbox-src={media.src.src}
-                            widths={[320, 480, 640]}
-                            sizes="(max-width: 42.5rem) 72vw, 14rem"
-                            loading={index === 0 && mediaIndex === 0 ? 'eager' : 'lazy'}
-                          />
-                        ) : (
-                          <video
-                            src={withBase(media.src)}
-                            poster={media.poster?.src}
-                            controls
-                            playsinline
-                            preload="metadata"
-                            aria-label={media.title ?? 'Micro log video'}
-                          />
-                        )}
-                        {media.type === 'image' && media.caption && (
-                          <figcaption>{media.caption}</figcaption>
-                        )}
-                      </figure>
-                    ))}
+                <div class="micro-copy" data-micro-copy>
+                  <div class="micro-content prose" data-micro-content>
+                    <MicroContent />
                   </div>
-                  <div class="micro-media-controls" hidden={item.entry.data.media.length <= 1}>
-                    <button type="button" data-micro-carousel-prev aria-label="Previous media">
-                      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12.5 4.5-5 5.5 5 5.5" /></svg>
-                    </button>
-                    <span class="micro-media-count" aria-live="polite">
-                      <span data-micro-carousel-current>1</span> / {item.entry.data.media.length}
-                    </span>
-                    <button type="button" data-micro-carousel-next aria-label="Next media">
-                      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4.5 5 5.5-5 5.5" /></svg>
-                    </button>
-                  </div>
-                </div>
-                <div class="micro-footer">
-                  <span class="feed-category">Micro</span>
-                  {item.category && <span class="feed-subcategory">{item.category}</span>}
-                  {item.tags && item.tags.length > 0 && (
-                    <div class="micro-tags" aria-label="Tags">
-                      {item.tags.map((tag) => (
-                        <span class="micro-tag">#{tag}</span>
+                  <button
+                    type="button"
+                    class="micro-expand"
+                    data-micro-expand
+                    aria-expanded="false"
+                  >
+                    Show more
+                  </button>
+                  <div
+                    class="micro-media"
+                    data-micro-carousel
+                    hidden={item.entry.data.media.length === 0}
+                  >
+                    <div class="micro-media-track" data-micro-carousel-track>
+                      {item.entry.data.media.map((media, mediaIndex) => (
+                        <figure class="micro-media-slide" data-micro-carousel-slide>
+                          {media.type === 'image' ? (
+                            <Image
+                              src={media.src}
+                              alt={media.alt}
+                              data-lightbox-src={media.src.src}
+                              widths={[320, 480, 640]}
+                              sizes="(max-width: 42.5rem) 72vw, 14rem"
+                              loading={index === 0 && mediaIndex === 0 ? 'eager' : 'lazy'}
+                            />
+                          ) : (
+                            <video
+                              src={withBase(media.src)}
+                              poster={media.poster?.src}
+                              controls
+                              playsinline
+                              preload="metadata"
+                              aria-label={media.title ?? 'Micro log video'}
+                            />
+                          )}
+                          {media.type === 'image' && media.caption && (
+                            <figcaption>{media.caption}</figcaption>
+                          )}
+                        </figure>
                       ))}
                     </div>
-                  )}
+                    <div class="micro-media-controls" hidden={item.entry.data.media.length <= 1}>
+                      <button type="button" data-micro-carousel-prev aria-label="Previous media">
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                          <path d="m12.5 4.5-5 5.5 5 5.5" />
+                        </svg>
+                      </button>
+                      <span class="micro-media-count" aria-live="polite">
+                        <span data-micro-carousel-current>1</span> / {item.entry.data.media.length}
+                      </span>
+                      <button type="button" data-micro-carousel-next aria-label="Next media">
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                          <path d="m7.5 4.5 5 5.5-5 5.5" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="micro-footer">
+                    <span class="feed-category">Micro</span>
+                    {item.category && <span class="feed-subcategory">{item.category}</span>}
+                    {item.tags && item.tags.length > 0 && (
+                      <div class="micro-tags" aria-label="Tags">
+                        {item.tags.map((tag) => (
+                          <span class="micro-tag">#{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
               </div>
             </article>
           </li>
@@ -1031,10 +1043,6 @@ const Heading = headingLevel;
     cursor: pointer;
   }
 
-  .micro-footer {
-    max-width: calc(100% - var(--micro-date-column) - var(--space-4));
-  }
-
   .micro-expand:hover {
     color: var(--color-blue);
   }
@@ -1048,6 +1056,7 @@ const Heading = headingLevel;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-3);
+    max-width: calc(100% - var(--micro-date-column) - var(--space-4));
     margin-top: var(--space-3);
   }
 
@@ -1135,6 +1144,12 @@ const Heading = headingLevel;
       flex-direction: row;
       align-items: baseline;
       gap: var(--space-2);
+    }
+
+    .feed-meta {
+      grid-column: 2 / -1;
+      grid-row: 3;
+      margin-top: var(--space-2);
     }
 
     .feed-title {

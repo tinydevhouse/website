@@ -30,70 +30,105 @@ const githubHref = config.site.github;
       }
     </a>
     <div class="nav-right">
-      <div class="nav-links">
-        {navItems.map((item) => <HeaderLink href={item.href}>{item.label}</HeaderLink>)}
-      </div>
-      <div class="nav-actions" aria-label="Site actions">
-        <ThemeToggle />
-        {
-          githubHref && (
-            <a
-              href={githubHref}
-              class="nav-icon-button"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              title="GitHub"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
+      <div class="nav-menu" id="nav-menu" data-nav-menu>
+        <div class="nav-links">
+          {navItems.map((item) => <HeaderLink href={item.href}>{item.label}</HeaderLink>)}
+        </div>
+        <div class="nav-actions" aria-label="Site actions">
+          <ThemeToggle />
+          {
+            githubHref && (
+              <a
+                href={githubHref}
+                class="nav-icon-button"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                title="GitHub"
               >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
-              </svg>
-            </a>
-          )
-        }
-        <button
-          type="button"
-          class="nav-icon-button nav-search-button"
-          data-search-palette-trigger
-          aria-label="Search"
-          title="Search"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+                </svg>
+              </a>
+            )
+          }
+          <button
+            type="button"
+            class="nav-icon-button nav-search-button"
+            data-search-palette-trigger
+            aria-label="Search"
+            title="Search"
           >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
-            <path d="M21 21l-6 -6"></path>
-          </svg>
-          <span class="nav-search-shortcut" aria-hidden="true">
-            <kbd>Ctrl + K</kbd>
-          </span>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+              <path d="M21 21l-6 -6"></path>
+            </svg>
+            <span class="nav-search-shortcut" aria-hidden="true">
+              <kbd>Ctrl + K</kbd>
+            </span>
+          </button>
+        </div>
       </div>
+      <button
+        type="button"
+        class="nav-icon-button nav-menu-toggle"
+        data-nav-menu-toggle
+        aria-controls="nav-menu"
+        aria-expanded="false"
+        aria-label="Menu"
+        title="Menu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 7h16"></path>
+          <path d="M4 12h16"></path>
+          <path d="M4 17h16"></path>
+        </svg>
+      </button>
     </div>
   </nav>
 </header>
+
+<script>
+  import { onReady } from '../scripts/mount';
+  import { mountNavMenu } from '../scripts/nav-menu';
+
+  onReady(mountNavMenu);
+</script>
 
 <script is:inline>
   (function () {
@@ -111,8 +146,8 @@ const githubHref = config.site.github;
         const activeElement = document.activeElement;
         const hasKeyboardFocus =
           activeElement instanceof HTMLElement &&
-            header.contains(activeElement) &&
-            activeElement.matches(':focus-visible');
+          header.contains(activeElement) &&
+          activeElement.matches(':focus-visible');
 
         header.classList.toggle('is-scrolled', currentY > 8);
 
@@ -151,166 +186,211 @@ const githubHref = config.site.github;
 </script>
 
 <style>
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  height: var(--nav-height);
-  background-color: var(--bg-primary);
-  transform: translateY(0);
-  transition:
-    transform var(--duration-normal) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
-  will-change: transform;
-}
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--nav-height);
+    background-color: var(--bg-primary);
+    transform: translateY(0);
+    transition:
+      transform var(--duration-normal) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+    will-change: transform;
+  }
 
-.site-header.is-scrolled {
-  background-color: color-mix(in srgb, var(--bg-primary) 88%, transparent);
-}
+  .site-header.is-scrolled {
+    background-color: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+  }
 
-.site-header.is-hidden {
-  transform: translateY(calc(-1 * var(--nav-height)));
-}
+  .site-header.is-hidden {
+    transform: translateY(calc(-1 * var(--nav-height)));
+  }
 
-.nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-}
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
 
-.nav-logo {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: var(--text-headline);
-  font-weight: var(--weight-semibold);
-  color: var(--label-primary);
-  text-decoration: none;
-  letter-spacing: 0;
-  transition:
-    color var(--duration-fast) var(--ease-out),
-    opacity var(--duration-fast) var(--ease-out);
-}
+  .nav-logo {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-headline);
+    font-weight: var(--weight-semibold);
+    color: var(--label-primary);
+    text-decoration: none;
+    letter-spacing: 0;
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-out);
+  }
 
-.nav-logo:hover {
-  opacity: 0.7;
-}
+  .nav-logo:hover {
+    opacity: 0.7;
+  }
 
-/*
+  /*
  * Monochrome logo: the SVG is used as a mask and painted with the theme text
  * color (currentColor), so it adapts to light/dark automatically. The box is
  * square by default; widen --nav-logo-width for a wide wordmark.
  */
-.nav-logo-mark {
-  display: block;
-  width: var(--nav-logo-width, 1.75rem);
-  height: var(--nav-logo-height, 1.75rem);
-  background-color: currentColor;
-  -webkit-mask: var(--logo-src) center / contain no-repeat;
-  mask: var(--logo-src) center / contain no-repeat;
-}
+  .nav-logo-mark {
+    display: block;
+    width: var(--nav-logo-width, 1.75rem);
+    height: var(--nav-logo-height, 1.75rem);
+    background-color: currentColor;
+    -webkit-mask: var(--logo-src) center / contain no-repeat;
+    mask: var(--logo-src) center / contain no-repeat;
+  }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  margin-right: var(--space-2);
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.nav-icon-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  padding: 0;
-  appearance: none;
-  border: 1px solid var(--separator);
-  border-radius: var(--radius-xs);
-  background: transparent;
-  color: var(--label-secondary);
-  font: inherit;
-  line-height: 1;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
-}
-
-.nav-icon-button:hover {
-  border-color: var(--label-tertiary);
-  background: var(--bg-secondary);
-  color: var(--label-primary);
-  opacity: 1;
-}
-
-.nav-icon-button:focus-visible {
-  outline: 1px solid currentColor;
-  outline-offset: 0.18rem;
-}
-
-.nav-icon-button svg {
-  width: 1rem;
-  height: 1rem;
-  flex: 0 0 auto;
-}
-
-.nav-search-button {
-  width: auto;
-  min-width: 5.6rem;
-  gap: 0.35rem;
-  padding-inline: 0.45rem;
-}
-
-.nav-search-shortcut {
-  display: inline-flex;
-  align-items: center;
-  height: 1rem;
-}
-
-.nav-search-shortcut kbd {
-  min-width: 3.1rem;
-  height: 1rem;
-}
-
-@media (max-width: 600px) {
   .nav-right {
-    gap: var(--space-2);
-    margin-right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  /*
+ * Above the breakpoint the panel is not a panel: `display: contents` drops it
+ * so the links and icon buttons sit directly in the `.nav-right` flex row.
+ */
+  .nav-menu {
+    display: contents;
   }
 
   .nav-links {
-    gap: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-right: var(--space-2);
+  }
+
+  .nav-actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .nav-menu-toggle {
+    display: none;
+  }
+
+  .nav-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    appearance: none;
+    border: 1px solid var(--separator);
+    border-radius: var(--radius-xs);
+    background: transparent;
+    color: var(--label-secondary);
+    font: inherit;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .nav-icon-button:hover {
+    border-color: var(--label-tertiary);
+    background: var(--bg-secondary);
+    color: var(--label-primary);
+    opacity: 1;
+  }
+
+  .nav-icon-button:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 0.18rem;
+  }
+
+  .nav-icon-button svg {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
   }
 
   .nav-search-button {
-    min-width: 1.9rem;
-    padding-inline: 0;
+    width: auto;
+    min-width: 5.6rem;
+    gap: 0.35rem;
+    padding-inline: 0.45rem;
   }
 
   .nav-search-shortcut {
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    height: 1rem;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .site-header {
-    transition: none;
+  .nav-search-shortcut kbd {
+    min-width: 3.1rem;
+    height: 1rem;
   }
-}
+
+  @media (max-width: 600px) {
+    .nav-inner {
+      position: relative;
+    }
+
+    .nav-menu-toggle {
+      display: inline-flex;
+    }
+
+    .nav-menu {
+      position: absolute;
+      z-index: 1;
+      top: calc(100% - var(--space-2));
+      /* The nav is the padded shell, so `right: 0` would be the padding edge —
+         offset by the shell padding to line the panel up with the toggle. */
+      right: var(--site-shell-padding-mobile);
+      display: none;
+      grid-auto-flow: row;
+      gap: var(--space-4);
+      width: max-content;
+      padding: var(--space-4);
+      border: 1px solid var(--separator);
+      border-radius: var(--radius-sm);
+      background: var(--bg-primary);
+    }
+
+    .nav-menu.is-open {
+      display: grid;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-3);
+      margin-right: 0;
+    }
+
+    .nav-actions {
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .nav-search-button {
+      min-width: 1.9rem;
+      padding-inline: 0;
+    }
+
+    .nav-search-shortcut {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
 </style>
