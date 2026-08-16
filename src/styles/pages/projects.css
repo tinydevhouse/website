@@ -85,7 +85,6 @@
   }
 
   .projects-top {
-    display: grid;
     gap: var(--space-2);
   }
 }
