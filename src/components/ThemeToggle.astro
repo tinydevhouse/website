@@ -71,6 +71,13 @@
         const isDark = active === 'mocha';
         toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
         toggle.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+
+        // Keep the browser chrome on the page background rather than a guess at it,
+        // by reading the token the page itself is painted with.
+        const themeColor = document.querySelector('meta[data-theme-color]');
+        if (themeColor) {
+          themeColor.content = getComputedStyle(root).getPropertyValue('--bg-primary').trim();
+        }
       }
 
       toggle.addEventListener('click', () => {

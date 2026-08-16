@@ -94,7 +94,10 @@ const websiteJsonLd =
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<!-- `viewport-fit=cover` lets the page paint into the display's safe areas
+     (notch, home indicator) instead of leaving a system-coloured band around it.
+     Layout compensates with env(safe-area-inset-*) in base.css and the footer. -->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <style is:inline>
   html {
     scrollbar-gutter: stable;
@@ -174,8 +177,12 @@ const websiteJsonLd =
     </>
   )
 }
-<meta name="theme-color" content="#eff1f5" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#1e1e2e" media="(prefers-color-scheme: dark)" />
+<!-- Colours iOS Safari's bars so they don't sit as a pale band under the footer.
+     `content` is filled in by ThemeToggle from the live --bg-primary, because the
+     theme is a manual toggle and `theme-color` can't read a CSS variable.
+     No prefers-color-scheme fallback: without JS `data-theme` is never set, so the
+     page is always latte and an OS-driven value here would contradict it. -->
+<meta name="theme-color" data-theme-color content="" />
 <link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} RSS`} href={rssHref} />
 <meta name="generator" content={Astro.generator} />
 <meta name="robots" content={robots} />

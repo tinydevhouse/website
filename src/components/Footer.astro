@@ -33,7 +33,8 @@ const footerLinks = config.footerNav.filter((item) => item.href !== '/');
 <style>
 .site-footer {
   background: transparent;
-  padding: var(--space-4) 0 var(--space-10);
+  /* Extra bottom room so the last row clears the home indicator. */
+  padding: var(--space-4) 0 calc(var(--space-10) + env(safe-area-inset-bottom));
   margin-top: var(--space-12);
   border-top: 1px solid var(--separator);
 }
