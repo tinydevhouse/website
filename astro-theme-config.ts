@@ -52,17 +52,9 @@ const config = {
   ] as NavItem[],
 
   content: {
-    categoryOrder: [
-      'Design',
-      'Getting Started',
-      'Markdown',
-      'Open Source',
-      'Systems',
-      'Notes',
-      'Research',
-      'Performance',
-      'MDX',
-    ],
+    // Drives the order of the filter row on /blog. Categories not listed here
+    // sort after the listed ones, alphabetically.
+    categoryOrder: ['Behind the Build', 'Updates', 'Notes'],
   },
 
   behavior: {

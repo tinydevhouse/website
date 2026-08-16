@@ -7,10 +7,11 @@ export default [
   ...tseslint.configs.recommended,
   ...astroPlugin.configs.recommended,
   {
-    files: ['*.mjs', 'src/**/*.js'],
+    // Config and remark plugins are plain .mjs run by Node, so they are outside
+    // the Astro/TS environments that supply these globals everywhere else.
+    files: ['*.mjs', 'src/**/*.mjs'],
     languageOptions: {
       globals: {
-        Response: 'readonly',
         URL: 'readonly',
       },
     },

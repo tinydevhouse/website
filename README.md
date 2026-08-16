@@ -13,7 +13,7 @@ The site is an Astro static site with Markdown/MDX content, a project archive, d
 - `src/pages/` contains the main routes.
 - `src/content/blog/` contains blog posts.
 - `src/content/projects/` contains project pages.
-- `src/content/from-template/` keeps template/reference posts out of the main blog.
+- `src/content/micros/` contains short-form notes.
 - `src/components/` contains shared UI.
 - `src/styles/` contains design tokens, page styles, prose styles, and component CSS.
 - `astro-theme-config.ts` is the main place for site title, navigation, social links, comments, and About page copy.
@@ -50,18 +50,11 @@ Create posts in `src/content/blog/` and projects in `src/content/projects/`. The
 
 Images that belong to content can live in `src/assets/`, then be imported or referenced from Markdown frontmatter depending on the page layout.
 
-## Using This As A Template
+## Configuration
 
-This repository is personal to Tiny Dev House, but the site is intentionally easy to adapt.
+`astro-theme-config.ts` is the single source for site URL, title, navigation, social links, comment settings, and About page copy.
 
-1. Fork or copy the repository.
-2. Update `astro-theme-config.ts` with your site URL, title, navigation, social links, About page content, and comment settings.
-3. Replace `public/logo-dark.svg`, favicons, `public/og.png`, and any sample images you do not want.
-4. Replace or remove content in `src/content/blog/`, `src/content/projects/`, and `src/content/from-template/`.
-5. Update package metadata in `package.json`.
-6. Run `pnpm check` and `pnpm build`.
-
-If you deploy under a subpath, set `site.base` in `astro-theme-config.ts`. If you deploy at a domain root, keep it empty.
+If you deploy under a subpath, set `site.base` there. If you deploy at a domain root, keep it empty. Every internal link and asset URL must go through `withBase()` from `src/utils/paths` so subpath deployments keep working.
 
 ## Shipping Tiny Dev House
 

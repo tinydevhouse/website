@@ -1,9 +1,10 @@
+import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
 import { SITE_DESCRIPTION, SITE_LANG, SITE_TITLE } from '../consts';
 import { withBase } from '../utils/paths';
 
-export async function GET(context) {
+export async function GET(context: APIContext) {
   const posts = (await getCollection('blog'))
     .filter((p) => !p.data.draft)
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());

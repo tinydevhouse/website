@@ -661,7 +661,7 @@
   --callout-label: 'Note';
 }
 
-/* Accordion built at build time by remark-waffle from each :::waffle block. */
+/* Accordion built at build time by remark-waffle-emoji from each :::waffle block. */
 .prose .waffle {
   margin-block: var(--space-4);
 }
