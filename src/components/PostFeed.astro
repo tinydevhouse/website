@@ -13,6 +13,7 @@ export type BlogFeedItem = {
   type: 'blog';
   id: string;
   date: Date;
+  updatedDate?: Date;
   title: string;
   description?: string;
   category?: string;
@@ -85,6 +86,7 @@ if (passedItems) {
     type: 'blog',
     id: post.id,
     date: post.data.pubDate,
+    updatedDate: post.data.updatedDate,
     title: post.data.title,
     description: post.data.description,
     category: post.data.category,
@@ -103,6 +105,7 @@ if (passedItems) {
       type: 'blog',
       id: post.id,
       date: post.data.pubDate,
+      updatedDate: post.data.updatedDate,
       title: post.data.title,
       description: post.data.description,
       category: post.data.category,
@@ -287,7 +290,14 @@ const Heading = headingLevel;
                   <Heading class="feed-title">{item.title}</Heading>
                   {item.description && <p class="feed-desc">{item.description}</p>}
                 </div>
-                <FormattedDate class="feed-date index-date" date={item.date} />
+                <span class="feed-dates">
+                  <FormattedDate class="feed-date index-date" date={item.date} />
+                  {item.type === 'blog' && item.updatedDate && (
+                    <span class="feed-updated index-date">
+                      Updated <FormattedDate date={item.updatedDate} />
+                    </span>
+                  )}
+                </span>
                 <div class="feed-meta">
                   <span class="feed-category">Article</span>
                   {item.category && <span class="feed-subcategory">{item.category}</span>}
@@ -728,9 +738,19 @@ const Heading = headingLevel;
     grid-row: 1;
   }
 
-  .feed-link :global(.feed-date) {
+  .feed-dates {
     grid-column: 3;
     grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-1);
+    text-align: right;
+  }
+
+  .feed-updated {
+    color: var(--label-quaternary);
+    white-space: nowrap;
   }
 
   .feed-body {
@@ -1109,9 +1129,12 @@ const Heading = headingLevel;
       grid-row: auto;
     }
 
-    .feed-link :global(.feed-date) {
+    .feed-dates {
       grid-column: 2;
       grid-row: 2;
+      flex-direction: row;
+      align-items: baseline;
+      gap: var(--space-2);
     }
 
     .feed-title {

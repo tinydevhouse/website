@@ -1,7 +1,6 @@
 ---
 import '../styles/pages/home.css';
 import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import HomeMicroGrid from '../components/HomeMicroGrid.astro';
@@ -9,6 +8,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getUiText } from '../ui';
 import { withBase } from '../utils/paths';
+import { getNumberedProjects } from '../utils/projects';
 const tr = getUiText();
 
 const posts = (await getCollection('blog'))
@@ -19,17 +19,8 @@ const recentPosts = posts.slice(0, 5);
 const recentMicros = (await getCollection('micros'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 6);
-const sortProjects = (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) => {
-  const orderA = a.data.projectOrder ?? Number.POSITIVE_INFINITY;
-  const orderB = b.data.projectOrder ?? Number.POSITIVE_INFINITY;
-
-  if (orderA !== orderB) return orderA - orderB;
-
-  return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
-};
-const projects = (await getCollection('projects'))
-  .filter((p) => !p.data.draft && p.data.featured)
-  .sort(sortProjects)
+const projects = getNumberedProjects(await getCollection('projects'))
+  .filter(({ project }) => project.data.featured)
   .slice(0, 3);
 ---
 
@@ -54,7 +45,7 @@ const projects = (await getCollection('projects'))
             </a>
           </div>
           <ol class="home-project-list index-list">
-            {projects.map((project, i) => (
+            {projects.map(({ project, num }) => (
               <li class="home-project-item">
                 <a
                   href={withBase(`/projects/${project.id}/`)}
@@ -65,7 +56,7 @@ const projects = (await getCollection('projects'))
                   ]}
                 >
                   <span class="home-project-num index-num" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
+                    {num}
                   </span>
                   {project.data.heroImage && (
                     <span class="home-project-media">

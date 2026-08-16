@@ -60,21 +60,10 @@ const jsonLd = serializeScriptJson({
 
       <header class="post-header">
         <div class="post-accent"></div>
-        <div class="post-meta">
-          <FormattedDate class="meta-date" date={pubDate} />
+        <div class="project-heading">
+          <h1 class="post-title" data-pagefind-meta="title">{title}</h1>
           <span class="project-status">{statusLabel}</span>
-          {
-            updatedDate && (
-              <>
-                <span class="dot">·</span>
-                <span class="meta-updated">
-                  Updated <FormattedDate date={updatedDate} />
-                </span>
-              </>
-            )
-          }
         </div>
-        <h1 class="post-title" data-pagefind-meta="title">{title}</h1>
         {description && <p class="post-description">{description}</p>}
         {
           (stack.length > 0 || demoUrl || repoUrl) && (
@@ -101,6 +90,19 @@ const jsonLd = serializeScriptJson({
             </div>
           )
         }
+        <p class="post-meta project-dates">
+          <FormattedDate class="meta-date" date={pubDate} />
+          {
+            updatedDate && (
+              <>
+                <span class="dot">·</span>
+                <span class="meta-updated">
+                  Updated <FormattedDate date={updatedDate} />
+                </span>
+              </>
+            )
+          }
+        </p>
       </header>
 
       <div class="post-divider"></div>
@@ -143,8 +145,22 @@ const jsonLd = serializeScriptJson({
 </BaseLayout>
 
 <style>
+  .project-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .project-heading :global(.post-title) {
+    margin-bottom: 0;
+  }
+
   .project-status {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     padding: 0.3rem 0.5rem;
     border: 1px solid color-mix(in srgb, var(--ctp-mauve) 38%, transparent);
@@ -162,6 +178,10 @@ const jsonLd = serializeScriptJson({
     display: grid;
     gap: var(--space-4);
     margin-top: var(--space-6);
+  }
+
+  .project-dates {
+    margin: var(--space-4) 0 0;
   }
 
   .project-stack,

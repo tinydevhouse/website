@@ -5,10 +5,9 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE_DESCRIPTION } from '../../consts';
 import { withBase } from '../../utils/paths';
+import { getNumberedProjects } from '../../utils/projects';
 
-const projects = (await getCollection('projects'))
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const projects = getNumberedProjects(await getCollection('projects'));
 ---
 
 <BaseLayout title="Projects" description={SITE_DESCRIPTION}>
@@ -22,11 +21,11 @@ const projects = (await getCollection('projects'))
 
     <ol class="projects-list index-list">
       {
-        projects.map((project, i) => (
+        projects.map(({ project, num }) => (
           <li class="projects-item">
             <a href={withBase(`/projects/${project.id}/`)} class="projects-link index-link">
               <span class="projects-num index-num" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
+                {num}
               </span>
               <div class="projects-body">
                 <div class="projects-top">
