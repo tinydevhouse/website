@@ -17,17 +17,17 @@ I built this because I want to learn Swedish. There are too many good books in t
 
 ## Features
 
+You can import any EPUB, or paste plain text or Markdown into Lingon. It doesn't have to be a book, either. You can tag the texts you import as an article, lyrics, a nursery rhyme, or anything your heart desires.
+
 ### Translate and adapt to any language and level
 
-You can import any EPUB, or paste plain text or Markdown into Lingon. It doesn't have to be a book, either. You can tag it as an article, lyrics, a nursery rhyme, or anything your heart desires.
-
-You specify the original language and your target language and Lingon will adapt the book or text to your level. Dracula in Swedish at A1? We got you!
+Select your level and Lingon will adapt the text so you can read it without too much difficulty. Dracula in Swedish at A1? We got you!
 
 ![Reader showing part of Dracula at Swedish A1](../../assets/lingon/lingon-dracula_a1.png)
 
 You can translate directly from the original or select your level. If the book is already in your target language, you can always try to read the original. Too hard? Try to bring it down. Was it too easy? Try a level up!
 
-AI-generated adaptations are done per chapter. This does a couple of things. It makes sure we are not burning tokens and translating a bunch of stuff you might not even read. It also allows your level to fluctuate as you read through the book.
+AI generated adaptations are done per chapter. This does a couple of things. It makes sure we are not burning tokens and translating a bunch of stuff you might not even read. It also allows your level to fluctuate as you read through the book.
 
 ### Narration, recording and shadowing
 
@@ -39,7 +39,7 @@ The recordings are saved as plain files in your file system. You can listen to t
 
 ![Saved items side panel interaction](../../assets/lingon/lingon-notes_words_highlights.gif)
 
-#### Word definitions and flashcards
+#### Word definitions
 
 Click a word to save it. My idea here was to keep it very low friction. As shadowing is my modus operandi, I don't want to worry too much about words I don't understand. If I get the gist of the passage I'm reading, I can save any unknown words to review later without interrupting my flow.
 
@@ -65,13 +65,13 @@ Each of these items is available in the sidebar. But you can also view them as c
 
 ### Flashcards
 
-You can also make words you save into flashcards you can review using spaced repetion.
+Words you save can also be made into flashcards to be reviewed using spaced repetition.
 
 ![Flashcard interaction](../../assets/lingon/lingon-flashcards_review.gif)
 
 ### Keyboard bindings and a command palette
 
-I'm a keyboard person, and I also have poor memory. So I added a command palette with handy shortcuts and keybindings to help me remember until muscle memory takes over.
+I'm a keyboard person, and I also have poor memory. So I added a command palette with handy shortcuts and keybindings to help me out until muscle memory takes over.
 
 ![Command palette](../../assets/lingon/lingon-command.png)
 
@@ -91,6 +91,17 @@ I love little details:
 And I almost forgot. We also have light mode ☀️
 
 ![Reader in light mode](../../assets/lingon/lingon-light.png)
+
+## Built with
+
+| Layer        | Tech                                                        |
+| ------------ | ----------------------------------------------------------- |
+| **Frontend** | Vite, React, TypeScript, Tailwind, Zustand                   |
+| **Backend**  | Rust + Tauri                                                 |
+| **Storage**  | SQLite, Markdown, and local media files                      |
+| **AI**       | OpenAI API for adaptations, chat, and generated narration   |
+
+A TypeScript/React front end talks to a Rust core over Tauri's IPC bridge. Rust handles EPUB parsing, filesystem access, SQLite, AI requests, and credentials, while Zustand keeps only temporary UI state. Structured data such as book metadata, reading progress, flashcard scheduling, and conversations lives in SQLite. Content that remains useful outside Lingon (adaptations, notes, flashcards, narration, and recordings) is stored as open Markdown or media files in a library folder you choose.
 
 
 ## What's next?
