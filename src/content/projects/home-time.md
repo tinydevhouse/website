@@ -5,7 +5,7 @@ pubDate: 2026-08-15
 stack: ['TypeScript', 'React', 'WXT', 'Browser extension']
 status: 'on-hold'
 featured: true
-projectOrder: 2
+projectOrder: 3
 # NEW SCREENSHOT: Replace this card/social-preview hero with the strongest new gallery overview shot.
 heroImage: '../../assets/home-time/home-time-hero.png'
 draft: false
@@ -19,7 +19,7 @@ My endless hours in Hemnet were a little frustrating as I had to put every listi
 
 This is very much a work in progress, but here is what I have done so far.
 
-### Save listings without an account 
+### No account needed!
 
 I don't want to create a Hemnet account. And with this, I don't need to.  I can save my listings, enrich them with data that's important for me and most of it never leaves my browser. The only network calls are the ones that fetch travel times and public transport info when you save a home, using my own API keys.
 
@@ -28,13 +28,13 @@ I don't want to create a Hemnet account. And with this, I don't need to.  I can 
 Also serving light mode:
 ![Saved listings, light mode](../../assets/home-time/home-time-listings-light.png)
 
-### Public transport access, commute times and monthly cost directly on hemnet listings
+### Hemnet overlay
 
 I do not even want to open a listing for more information if I can't get to work by public transport. So I added an overlay to hemnet that will show me the public transport access and also commute times to my most important destinations. And I made sure I could choose different transportation modes depending on destination. You can also see an estimate of how your monthly cost would change if you were to buy that property.
 
 ![Home Time overlay in Hemnet](../../assets/home-time/home-time-overlay.jpg)
 
-### Centralised viweing times with calendar export 
+### Centralised viweing times
 
 Viewing times are picked up when you save a listing and can be seen all in one place with a Google Maps directions link from your home address. You can also export all viewing times to your calendar by downloading a .ics file.
 
