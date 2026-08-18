@@ -14,7 +14,8 @@ export function initReadingRail() {
 
   rail = mountTocRail({
     content: prose,
-    headings: '#prose-content h2[id]:has(> .heading-anchor)',
+    headings:
+      '#prose-content h2[id]:has(> .heading-anchor), #prose-content h3[id]:has(> .heading-anchor)',
     title: false,
     ariaLabel: 'Post outline',
     progressMode: 'content',
