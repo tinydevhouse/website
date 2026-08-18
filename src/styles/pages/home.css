@@ -183,9 +183,7 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
   border-radius: 0;
-  object-fit: cover;
   transition: filter 180ms var(--ease-out);
 }
 
