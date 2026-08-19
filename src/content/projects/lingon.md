@@ -2,7 +2,7 @@
 title: 'Lingon'
 description: 'An EPUB reader that allows you to read the books you want to read in the languages you want to learn, at the level that you need.'
 pubDate: 2026-08-16
-updatedDate:
+updatedDate: 2026-08-19
 stack: ['Rust', 'Tauri', 'React', 'AI', 'Learning']
 status: 'alpha'
 featured: true
@@ -11,7 +11,7 @@ heroImage: '../../assets/lingon/lingon-library.png'
 draft: false
 ---
 
-I built this because I want to learn Swedish. There are too many good books in the world that I have yet to read to use boring study materials. So I decided I wanted to bring them down to my level 😇
+I built this because I want to learn Swedish and there are too many good books in the world that I am yet to read. So I decided I wanted to bring those books down to my level instead of spending time on boring study materials 😇
 
 ![Library view](../../assets/lingon/lingon-library.png)
 
@@ -21,13 +21,13 @@ You can import any EPUB, or paste plain text or Markdown into Lingon. It doesn't
 
 ### Translate and adapt to any language and level
 
-Select your level and Lingon will adapt the text so you can read it without too much difficulty. Dracula in Swedish at A1? We got you!
+You can translate directly from the original, or select your level and Lingon will adapt the text so you can read it without too much difficulty. Dracula in Swedish at A1? We got you!
 
 ![Reader showing part of Dracula at Swedish A1](../../assets/lingon/lingon-dracula_a1.png)
 
-You can translate directly from the original or select your level. If the book is already in your target language, you can always try to read the original. Too hard? Try to bring it down. Was it too easy? Try a level up!
+If the book is already in your target language, you can always try to read the original. Too hard? Try to bring it down. Was it too easy? Try a level up!
 
-AI generated adaptations are done per chapter. This does a couple of things. It makes sure we are not burning tokens and translating a bunch of stuff you might not even read. It also allows your level to fluctuate as you read through the book.
+AI generated adaptations are done per chapter. This does a couple of things. It makes sure we are not burning tokens and translating a bunch of stuff you might not even read. And it also allows your level to fluctuate as you read through the book.
 
 ### Narration, recording and shadowing
 
@@ -36,6 +36,8 @@ You can listen to the book in your target language, record yourself while you re
 The recordings are saved as plain files in your file system. You can listen to them in Lingon or in any other program of your choice. You can also send them to a friend to critique your pronunciation and even go through the embarrassment of listening to yourself 😊
 
 ### Save for later
+
+Words, passages, notes, and AI chats are all available in the sidebar. But you can also view them as collections on a page containing everything you have saved across different chapters, books, and languages.
 
 ![Saved items side panel interaction](../../assets/lingon/lingon-notes_words_highlights.gif)
 
@@ -53,28 +55,36 @@ There is also a side panel where you can write notes as you read. They are linke
 
 #### AI threads
 
-When in doubt, you can bring in a little bot to help you clarify whatever is confusing you at the moment. 
+When in doubt, you can bring in a little bot to help you clarify whatever is confusing you at the moment.
 
 ![Recording of AI chat interaction](../../assets/lingon/lingon-ai_chat.gif)
 
 We have some handy context ready to be sent with your question, including highlighted passages, saved words, notes you've written, or the full chapter.
 
-If you had a good chat and want to save it for later, you can do so. Like everything else, it will be linked to the chapter and level you were reading during the conversation.
-
-Each of these items is available in the sidebar. But you can also view them as collections on a page containing everything you have saved across different chapters, books, and languages.
+If you had a good chat and want to save it for later, you can do so. Like everything else, it will be linked to the chapter and level you were reading during the conversation. You can also return to the saved conversations and continue from where you left off.
 
 ### Flashcards
 
-Words you save can also be made into flashcards to be reviewed using spaced repetition.
+Words you save can also be made into flashcards to be reviewed using spaced repetition. Once a saved word has a definition, it becomes ready for review.
 
 ![Flashcard interaction](../../assets/lingon/lingon-flashcards_review.gif)
+
+Each time you review a word, you choose **Remembered it** or **Forgot it**:
+
+- The first successful review schedules the word for the next day.
+- The second schedules it 6 days later.
+- The third schedules it 14 days later.
+- Further successful reviews schedule it every 30 days.
+- Choosing **Forgot it** resets that progress and brings the word back after ten minutes.
+- Reviewing a word before it is due does not advance its schedule.
+
+After three successful reviews on their scheduled dates the word becomes **Known**. Known words still return for review so they stay fresh. The flashcard includes the word's source sentence and book, keeping the vocabulary in the context where you found it.
 
 ### Keyboard bindings and a command palette
 
 I'm a keyboard person, and I also have poor memory. So I added a command palette with handy shortcuts and keybindings to help me out until muscle memory takes over.
 
 ![Command palette](../../assets/lingon/lingon-command.png)
-
 
 ### Other little things
 
@@ -94,17 +104,16 @@ And I almost forgot. We also have light mode ☀️
 
 ## Built with
 
-| Layer        | Tech                                                        |
-| ------------ | ----------------------------------------------------------- |
-| **Frontend** | Vite, React, TypeScript, Tailwind, Zustand                   |
-| **Backend**  | Rust + Tauri                                                 |
-| **Storage**  | SQLite, Markdown, and local media files                      |
-| **AI**       | OpenAI API for adaptations, chat, and generated narration   |
+| Layer        | Tech                                                      |
+| ------------ | --------------------------------------------------------- |
+| **Frontend** | Vite, React, TypeScript, Tailwind, Zustand                |
+| **Backend**  | Rust + Tauri                                              |
+| **Storage**  | SQLite, Markdown, and local media files                   |
+| **AI**       | OpenAI API for adaptations, chat, and generated narration |
 
 A TypeScript/React front end talks to a Rust core over Tauri's IPC bridge. Rust handles EPUB parsing, filesystem access, SQLite, AI requests, and credentials, while Zustand keeps only temporary UI state. Structured data such as book metadata, reading progress, flashcard scheduling, and conversations lives in SQLite. Content that remains useful outside Lingon (adaptations, notes, flashcards, narration, and recordings) is stored as open Markdown or media files in a library folder you choose.
 
+## What's next
 
-## What's next?
-
-- **Highlighted passages as flashcards.** The idea here is to give you the opportunity to try to translate passages you chose to review. There is no need to translate them directly—you could instead explain what you understood if you can't translate something exactly, and have an LLM give you feedback on how well you understood the passage.
+- **Highlighted passages as flashcards.** The idea here is to give you the opportunity to try to translate passages you chose to review. There is no need to translate them directly, you could instead explain what you understood if you can't translate something exactly, and have an LLM give you feedback on how well you understood the passage.
 - **A reading dashboard.** I'm itching to get the dashboard ready. I want to add some traditional NLP analysis for each book and create an algorithm that estimates its complexity and reading level.
