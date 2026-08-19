@@ -76,8 +76,7 @@
 
   max-width: var(--site-shell-width);
   margin: 0 auto;
-  padding: var(--page-shell-padding-top) var(--site-shell-padding)
-    var(--page-shell-padding-bottom);
+  padding: var(--page-shell-padding-top) var(--site-shell-padding) var(--page-shell-padding-bottom);
 }
 
 @media (max-width: 600px) {

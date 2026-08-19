@@ -62,7 +62,7 @@ const resolveGiscusTheme = async (container: HTMLElement): Promise<string> => {
 const setDataAttribute = (
   script: HTMLScriptElement,
   name: string,
-  value: string | undefined,
+  value: string | undefined
 ): void => {
   if (value) script.setAttribute(name, value);
 };

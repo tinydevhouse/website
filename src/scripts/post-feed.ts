@@ -52,9 +52,14 @@ function initPostFeeds(root: ParentNode = document) {
       if (count) count.lastChild!.textContent = ` / ${slides.length}`;
       const activeIndex = () => {
         if (!track || slides.length === 0) return 0;
-        return slides.reduce((nearest, slide, index) =>
-          Math.abs(slide.offsetLeft - track.scrollLeft) <
-          Math.abs(slides[nearest].offsetLeft - track.scrollLeft) ? index : nearest, 0);
+        return slides.reduce(
+          (nearest, slide, index) =>
+            Math.abs(slide.offsetLeft - track.scrollLeft) <
+            Math.abs(slides[nearest].offsetLeft - track.scrollLeft)
+              ? index
+              : nearest,
+          0
+        );
       };
       const goTo = (nextIndex: number) => {
         const index = (nextIndex + slides.length) % slides.length;
@@ -66,9 +71,13 @@ function initPostFeeds(root: ParentNode = document) {
       carousel.querySelector('[data-micro-carousel-next]')?.addEventListener('click', () => {
         goTo(activeIndex() + 1);
       });
-      track?.addEventListener('scroll', () => {
-        if (current) current.textContent = String(activeIndex() + 1);
-      }, { passive: true });
+      track?.addEventListener(
+        'scroll',
+        () => {
+          if (current) current.textContent = String(activeIndex() + 1);
+        },
+        { passive: true }
+      );
     });
 
     feed.querySelectorAll<HTMLElement>('[data-micro-copy]').forEach((copy) => {

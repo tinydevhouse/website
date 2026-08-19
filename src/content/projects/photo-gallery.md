@@ -177,14 +177,14 @@ Replace photo-galleryexif-vid.png; consider renaming it to photo-gallery-exif.pn
 
 ## Built with
 
-| Layer        | Tech                                      |
-| ------------ | ----------------------------------------- |
-| **Frontend** | Vite, React, TypeScript, Tailwind         |
-| **Backend**  | Rust + Tauri                              |
-| **Storage**  | SQLite                                    |
-| **AI**       | Local CLIP ViT-B-32 with ONNX Runtime     |
-| **Map**      | Leaflet                                   |
-| **Plots**    | ECharts and Recharts                      |
+| Layer        | Tech                                  |
+| ------------ | ------------------------------------- |
+| **Frontend** | Vite, React, TypeScript, Tailwind     |
+| **Backend**  | Rust + Tauri                          |
+| **Storage**  | SQLite                                |
+| **AI**       | Local CLIP ViT-B-32 with ONNX Runtime |
+| **Map**      | Leaflet                               |
+| **Plots**    | ECharts and Recharts                  |
 
 A TypeScript/React front end talks to a Rust core over Tauri's IPC bridge. There is no server or account, and the library and AI processing stay local. The map does fetch its tiles and place data from public map services. Recharts handles the dashboard charts with clean React composition, while the cluster view uses ECharts' canvas renderer to stay smooth with thousands of photo points on screen at once.
 

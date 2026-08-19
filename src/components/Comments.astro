@@ -13,8 +13,7 @@ const giscus = {
     import.meta.env.PUBLIC_GISCUS_REACTIONS_ENABLED || comments.giscus.reactionsEnabled,
 };
 const commentsMode = import.meta.env.PUBLIC_GISCUS_MODE || comments.mode;
-const canUseCommentsMode =
-  commentsMode === 'giscus' || commentsMode === 'giscus-custom';
+const canUseCommentsMode = commentsMode === 'giscus' || commentsMode === 'giscus-custom';
 const canRenderGiscus =
   canUseCommentsMode &&
   comments.provider === 'giscus' &&
@@ -61,34 +60,34 @@ const giscusMapping = giscus.mapping === 'pathname' ? 'specific' : giscus.mappin
 </script>
 
 <style>
-.comments-section {
-  max-width: var(--site-shell-width);
-  margin-top: var(--space-8);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--separator);
-}
+  .comments-section {
+    max-width: var(--site-shell-width);
+    margin-top: var(--space-8);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--separator);
+  }
 
-.comments-label {
-  margin: 0 0 var(--space-4);
-  color: var(--label-tertiary);
-  font-size: var(--text-caption-1);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+  .comments-label {
+    margin: 0 0 var(--space-4);
+    color: var(--label-tertiary);
+    font-size: var(--text-caption-1);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
 
-.giscus {
-  --giscus-unmeasured-height: min(104rem, 220vh);
+  .giscus {
+    --giscus-unmeasured-height: min(104rem, 220vh);
 
-  min-height: 80px;
-}
+    min-height: 80px;
+  }
 
-.giscus :global(iframe.giscus-frame) {
-  display: block;
-  width: 100%;
-}
+  .giscus :global(iframe.giscus-frame) {
+    display: block;
+    width: 100%;
+  }
 
-.giscus:not(.is-resized) :global(iframe.giscus-frame) {
-  min-height: var(--giscus-unmeasured-height);
-}
+  .giscus:not(.is-resized) :global(iframe.giscus-frame) {
+    min-height: var(--giscus-unmeasured-height);
+  }
 </style>

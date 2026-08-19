@@ -31,80 +31,79 @@ const footerLinks = config.footerNav.filter((item) => item.href !== '/');
 </footer>
 
 <style>
-.site-footer {
-  background: transparent;
-  /* Extra bottom room so the last row clears the home indicator. */
-  padding: var(--space-4) 0 calc(var(--space-10) + env(safe-area-inset-bottom));
-  margin-top: var(--space-12);
-  border-top: 1px solid var(--separator);
-}
-
-.footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-6);
-  flex-wrap: wrap;
-}
-
-.footer-copy {
-  font-family: var(--font-mono);
-  font-size: var(--text-footnote);
-  color: var(--label-tertiary);
-  margin: 0;
-}
-
-.footer-links {
-  display: flex;
-  gap: var(--space-5);
-}
-
-.footer-links a,
-.footer-links button {
-  font-family: var(--font-mono);
-  font-size: var(--text-footnote);
-  font-weight: inherit;
-  line-height: inherit;
-  color: var(--label-tertiary);
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.footer-links a:hover,
-.footer-links button:hover {
-  color: var(--label-primary);
-  opacity: 1;
-}
-
-
-@media (max-width: 600px) {
   .site-footer {
-    margin-top: var(--space-10);
+    background: transparent;
+    /* Extra bottom room so the last row clears the home indicator. */
+    padding: var(--space-4) 0 calc(var(--space-10) + env(safe-area-inset-bottom));
+    margin-top: var(--space-12);
+    border-top: 1px solid var(--separator);
   }
 
   .footer-inner {
-    flex-direction: row;
+    display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-4);
-    text-align: left;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: var(--text-footnote);
+    color: var(--label-tertiary);
+    margin: 0;
   }
 
   .footer-links {
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    margin-right: 0;
+    display: flex;
+    gap: var(--space-5);
   }
-}
 
-@media (max-width: 340px) {
-  .footer-inner {
-    flex-direction: column;
-    align-items: flex-start;
+  .footer-links a,
+  .footer-links button {
+    font-family: var(--font-mono);
+    font-size: var(--text-footnote);
+    font-weight: inherit;
+    line-height: inherit;
+    color: var(--label-tertiary);
+    text-decoration: none;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
   }
-}
+
+  .footer-links a:hover,
+  .footer-links button:hover {
+    color: var(--label-primary);
+    opacity: 1;
+  }
+
+  @media (max-width: 600px) {
+    .site-footer {
+      margin-top: var(--space-10);
+    }
+
+    .footer-inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      text-align: left;
+    }
+
+    .footer-links {
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      margin-right: 0;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .footer-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
 </style>

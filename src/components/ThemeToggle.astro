@@ -19,7 +19,8 @@
     aria-hidden="true"
   >
     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-    <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"></path>
+    <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"
+    ></path>
   </svg>
   <svg
     class="theme-icon theme-icon-sun"
@@ -69,7 +70,10 @@
           return;
         }
         const isDark = active === 'mocha';
-        toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+        toggle.setAttribute(
+          'aria-label',
+          isDark ? 'Switch to light theme' : 'Switch to dark theme'
+        );
         toggle.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
 
         // Keep the browser chrome on the page background rather than a guess at it,
@@ -81,7 +85,8 @@
       }
 
       toggle.addEventListener('click', () => {
-        const next = normalize(root.getAttribute('data-theme') || 'latte') === 'mocha' ? 'latte' : 'mocha';
+        const next =
+          normalize(root.getAttribute('data-theme') || 'latte') === 'mocha' ? 'latte' : 'mocha';
         root.setAttribute('data-theme', next);
         try {
           localStorage.setItem('theme', next);
@@ -91,7 +96,10 @@
         sync();
       });
 
-      new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+      new MutationObserver(sync).observe(root, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      });
       sync();
     }
 
@@ -104,58 +112,58 @@
 </script>
 
 <style>
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  padding: 0;
-  appearance: none;
-  border: 1px solid var(--separator);
-  border-radius: var(--radius-xs);
-  background: transparent;
-  color: var(--label-secondary);
-  font: inherit;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
-}
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    appearance: none;
+    border: 1px solid var(--separator);
+    border-radius: var(--radius-xs);
+    background: transparent;
+    color: var(--label-secondary);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
 
-.theme-toggle:hover {
-  border-color: var(--label-tertiary);
-  background: var(--bg-secondary);
-  color: var(--label-primary);
-}
+  .theme-toggle:hover {
+    border-color: var(--label-tertiary);
+    background: var(--bg-secondary);
+    color: var(--label-primary);
+  }
 
-.theme-toggle:focus-visible {
-  outline: 1px solid currentColor;
-  outline-offset: 0.18rem;
-}
+  .theme-toggle:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 0.18rem;
+  }
 
-.theme-icon {
-  width: 1rem;
-  height: 1rem;
-}
+  .theme-icon {
+    width: 1rem;
+    height: 1rem;
+  }
 
-.theme-icon-sun {
-  display: none;
-}
+  .theme-icon-sun {
+    display: none;
+  }
 
-:global([data-theme='mocha']) .theme-icon-moon,
-:global([data-theme='dark']) .theme-icon-moon,
-:global([data-theme='macchiato']) .theme-icon-moon,
-:global([data-theme='frappe']) .theme-icon-moon {
-  display: none;
-}
+  :global([data-theme='mocha']) .theme-icon-moon,
+  :global([data-theme='dark']) .theme-icon-moon,
+  :global([data-theme='macchiato']) .theme-icon-moon,
+  :global([data-theme='frappe']) .theme-icon-moon {
+    display: none;
+  }
 
-:global([data-theme='mocha']) .theme-icon-sun,
-:global([data-theme='dark']) .theme-icon-sun,
-:global([data-theme='macchiato']) .theme-icon-sun,
-:global([data-theme='frappe']) .theme-icon-sun {
-  display: block;
-}
+  :global([data-theme='mocha']) .theme-icon-sun,
+  :global([data-theme='dark']) .theme-icon-sun,
+  :global([data-theme='macchiato']) .theme-icon-sun,
+  :global([data-theme='frappe']) .theme-icon-sun {
+    display: block;
+  }
 </style>

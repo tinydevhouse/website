@@ -61,9 +61,9 @@ const projects = getNumberedProjects(await getCollection('projects'))
                   {project.data.heroImage && (
                     <span class="home-project-media">
                       <span class="home-project-window-bar" aria-hidden="true">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                        <span />
+                        <span />
+                        <span />
                       </span>
                       <Image
                         src={project.data.heroImage}
@@ -83,7 +83,9 @@ const projects = getNumberedProjects(await getCollection('projects'))
                           ↗
                         </span>
                       </span>
-                      <span class="home-project-status">{project.data.status.replace('-', ' ')}</span>
+                      <span class="home-project-status">
+                        {project.data.status.replace('-', ' ')}
+                      </span>
                     </span>
                     <span class="home-project-desc">{project.data.description}</span>
                     {project.data.stack.length > 0 && (
@@ -138,7 +140,9 @@ const projects = getNumberedProjects(await getCollection('projects'))
         <section class="home-section">
           <div class="home-section-header">
             <h2 class="home-section-label">Little thoughts</h2>
-            <a href={withBase('/blog')} class="home-view-all">All micros ↗</a>
+            <a href={withBase('/blog')} class="home-view-all">
+              All micros ↗
+            </a>
           </div>
           <HomeMicroGrid micros={recentMicros} />
         </section>
